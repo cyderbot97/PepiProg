@@ -13,7 +13,9 @@ int main()
 	// Configure System Clock (64MHz/72MHz depending on HSI/HSE selection)
 	SystemClock_Config();
 
+	int tampon = 0;
 	adc_init();
+	servo_init();
 
 	// Initialize Debug Console
 	BSP_Console_Init();
@@ -28,8 +30,11 @@ int main()
 		while(!(ADC1->ISR & ADC_ISR_EOC));
 
 		// Report result to console
-		my_printf("ADC value = %d\r\n", (ADC1->DR));
+		tampon = (ADC1->DR)*1000/4096;
+		my_printf("ADC value = %d\r\n", tampon);
+		TIM2->CCR2 = 1000+tampon;
 		delay_ms(200);
+
 		//ADC1->CR |= ADC_CR_ADSTART;
 	}
 }
