@@ -12,9 +12,7 @@ int main()
 {
 	// Configure System Clock (64MHz/72MHz depending on HSI/HSE selection)
 	SystemClock_Config();
-
-	int tampon = 0;
-	adc_init();
+	int i=0;
 	servo_init();
 
 	// Initialize Debug Console
@@ -25,17 +23,42 @@ int main()
 	// Loop forever
 	while(1)
 	{
-		// LED test
-		//while ((ADC1->ISR & ADC_ISR_EOC) != ADC_ISR_EOC);
-		while(!(ADC1->ISR & ADC_ISR_EOC));
+		i=1000;
+		TIM1->CCR1 = i;
+		TIM1->CCR2 = i;
+		TIM1->CCR3 = i;
+		TIM1->CCR4 = i;
 
-		// Report result to console
-		tampon = (ADC1->DR)*1000/4096;
-		my_printf("ADC value = %d\r\n", tampon);
-		TIM2->CCR2 = 1000+tampon;
-		delay_ms(200);
+		TIM3->CCR1 = i;
+		TIM3->CCR2 = i;
+		TIM3->CCR3 = i;
+		TIM3->CCR4 = i;
+		delay_ms(1500);
+		i=1500;
+		TIM1->CCR1 = i;
+		TIM1->CCR2 = i;
+		TIM1->CCR3 = i;
+		TIM1->CCR4 = i;
 
-		//ADC1->CR |= ADC_CR_ADSTART;
+		TIM3->CCR1 = i;
+		TIM3->CCR2 = i;
+		TIM3->CCR3 = i;
+		TIM3->CCR4 = i;
+		delay_ms(1500);
+		i=2000;
+		TIM1->CCR1 = i;
+		TIM1->CCR2 = i;
+		TIM1->CCR3 = i;
+		TIM1->CCR4 = i;
+
+		TIM3->CCR1 = i;
+		TIM3->CCR2 = i;
+		TIM3->CCR3 = i;
+		TIM3->CCR4 = i;
+		delay_ms(1500);
+
+
+
 	}
 }
 
