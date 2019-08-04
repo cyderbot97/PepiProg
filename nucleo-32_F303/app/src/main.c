@@ -2,17 +2,24 @@
 #include "main.h"
 #include "bsp.h"
 #include "delay.h"
+#include "math.h"
 
+#define PI 3.14
 
 static uint8_t SystemClock_Config(void);
 
+int angle(int);
+int map(int, int, int, int, int);
+
+const uint16_t mot1[19] = { 60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78};
+const uint16_t mot2[19] = { 60,62,64,67,70,73,76,79,81,84,87,90,93,97,100,104,109,114,120};
 
 
 int main()
 {
 	// Configure System Clock (64MHz/72MHz depending on HSI/HSE selection)
 	SystemClock_Config();
-	int i=0;
+	int value;
 	servo_init();
 
 	// Initialize Debug Console
@@ -23,45 +30,56 @@ int main()
 	// Loop forever
 	while(1)
 	{
-		i=1000;
-		TIM1->CCR1 = i;
-		TIM1->CCR2 = i;
-		TIM1->CCR3 = i;
-		TIM1->CCR4 = i;
+		my_printf("\r\n BASCULE \r\n");
+		for(float i = 0; i < 18.5; i=i+0.5)
+		{
+			value = 60+i+52-acos((sin(i*M_PI/180)*50+25)/41)*180/M_PI;
 
-		TIM3->CCR1 = i;
-		TIM3->CCR2 = i;
-		TIM3->CCR3 = i;
-		TIM3->CCR4 = i;
-		delay_ms(1500);
-		i=1500;
-		TIM1->CCR1 = i;
-		TIM1->CCR2 = i;
-		TIM1->CCR3 = i;
-		TIM1->CCR4 = i;
+			my_printf("Valeur moteur de poussée = %d\r\n", value);
 
-		TIM3->CCR1 = i;
-		TIM3->CCR2 = i;
-		TIM3->CCR3 = i;
-		TIM3->CCR4 = i;
-		delay_ms(1500);
-		i=2000;
-		TIM1->CCR1 = i;
-		TIM1->CCR2 = i;
-		TIM1->CCR3 = i;
-		TIM1->CCR4 = i;
+			TIM3->CCR1 = angle(value);
+			TIM3->CCR2 = angle(60+i);
 
-		TIM3->CCR1 = i;
-		TIM3->CCR2 = i;
-		TIM3->CCR3 = i;
-		TIM3->CCR4 = i;
-		delay_ms(1500);
+			delay_ms(10);
 
+		}
+		delay_ms(2000);
+		my_printf("\r\n DESCENTE \r\n");
+		for(float i = 18; i >= 0; i=i-0.5)
+		{
+			value = 60+i+52-acos((sin(i*M_PI/180)*50+25)/41)*180/M_PI;
 
+			my_printf("Valeur moteur de poussée = %d\r\n", value);
 
+			TIM3->CCR1 = angle(value);
+			TIM3->CCR2 = angle(60+i);
+
+			delay_ms(10);
+
+		}
+
+		delay_ms(2000);
+
+		/* Valeur pré-enregistré
+		for(int i = 0; i < 19; i++)
+		{
+
+			TIM3->CCR1 = angle(mot2[i]);
+			TIM3->CCR2 = angle(mot1[i]);
+			delay_ms(50);
+
+		}
+		*/
 	}
 }
+int  angle(int angle_deg){
 
+	return map(angle_deg,0,120,1000,2000);
+}
+
+int map(int x, int in_min, int in_max, int out_min, int out_max) {
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 
 /*
  * 	Clock configuration for the Nucleo STM32F303K8 board
