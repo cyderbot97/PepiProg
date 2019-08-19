@@ -6,71 +6,74 @@
 
 #define PI 3.14
 
+void i2c_init(void);
 static uint8_t SystemClock_Config(void);
 
 int angle(int);
 int map(int, int, int, int, int);
 
-const uint16_t mot1[19] = { 60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78};
-const uint16_t mot2[19] = { 60,62,64,67,70,73,76,79,81,84,87,90,93,97,100,104,109,114,120};
 
-
-int main()
+int main(void)
 {
-	// Configure System Clock (64MHz/72MHz depending on HSI/HSE selection)
+	// Configure System Clock for 48MHz from 8MHz HSE
 	SystemClock_Config();
-	int value;
-	servo_init();
+
 
 	// Initialize Debug Console
 	BSP_Console_Init();
 	my_printf("\r\nConsole Ready!\r\n");
 	my_printf("SYSCLK = %d Hz\r\n", SystemCoreClock);
 
-	// Loop forever
+	// Initialize I2C1 peripheral
+	i2c_init();
+
+	// Start I2C transaction
+	I2C1->CR2 |= I2C_CR2_START;  // <-- Breakpoint here
+
+
 	while(1)
 	{
-		my_printf("\r\n BASCULE \r\n");
-		for(float i = 0; i < 18.5; i=i+0.5)
-		{
-			value = 60+i+52-acos((sin(i*M_PI/180)*50+25)/41)*180/M_PI;
-
-			my_printf("Valeur moteur de poussée = %d\r\n", value);
-
-			TIM3->CCR1 = angle(value);
-			TIM3->CCR2 = angle(60+i);
-
-			delay_ms(10);
-
-		}
-		delay_ms(2000);
-		my_printf("\r\n DESCENTE \r\n");
-		for(float i = 18; i >= 0; i=i-0.5)
-		{
-			value = 60+i+52-acos((sin(i*M_PI/180)*50+25)/41)*180/M_PI;
-
-			my_printf("Valeur moteur de poussée = %d\r\n", value);
-
-			TIM3->CCR1 = angle(value);
-			TIM3->CCR2 = angle(60+i);
-
-			delay_ms(10);
-
-		}
-
-		delay_ms(2000);
-
-		/* Valeur pré-enregistré
-		for(int i = 0; i < 19; i++)
-		{
-
-			TIM3->CCR1 = angle(mot2[i]);
-			TIM3->CCR2 = angle(mot1[i]);
-			delay_ms(50);
-
-		}
-		*/
 	}
+}
+void i2c_init()
+{
+
+
+	// Enable GPIOB clock
+	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
+
+	// Configure PB8, PB9 as AF mode
+	GPIOB->MODER &= ~(GPIO_MODER_MODER6 | GPIO_MODER_MODER6);
+	GPIOB->MODER |= (0X02 << GPIO_MODER_MODER6_Pos) | (0X02 << GPIO_MODER_MODER7_Pos);
+
+	// Connect to I2C1 (AF1)
+	GPIOB->AFR[0] &= ~(0xFF000000);
+	GPIOB->AFR[0] |=   0x44000000;
+
+	// Setup Open-Drain
+	GPIOB->OTYPER |= GPIO_OTYPER_OT_6 | GPIO_OTYPER_OT_7;
+
+	// Select SYSCLK as I2C1 clock (48MHz)
+	RCC->CFGR3 |= RCC_CFGR3_I2C1SW;
+
+	// Enable I2C1 clock
+	RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
+
+	// Make sure I2C1 is disabled
+	I2C1->CR1 &= ~I2C_CR1_PE;
+
+	// Reset I2C1 Configuration to default values
+	I2C1->CR1 	  = 0x00000000;
+	I2C1->CR2 	  = 0x00000000;
+	I2C1->TIMINGR = 0x00000000;
+
+	// Configure timing for 100kHz, 50% duty cycle
+	I2C1->TIMINGR |= ((4 -1) <<I2C_TIMINGR_PRESC_Pos); // Clock prescaler /4 -> 12MHz
+	I2C1->TIMINGR |= (60 	 <<I2C_TIMINGR_SCLH_Pos);  // High half-period = 5µs
+	I2C1->TIMINGR |= (60     <<I2C_TIMINGR_SCLL_Pos);  // Low  half-period = 5µs
+
+	// Enable I2C1
+	I2C1->CR1 |= I2C_CR1_PE;
 }
 int  angle(int angle_deg){
 
