@@ -3,6 +3,7 @@
 #include "bsp.h"
 #include "delay.h"
 #include "math.h"
+#include "i2c.h"
 
 #define PI 3.14
 
@@ -11,10 +12,32 @@ static uint8_t SystemClock_Config(void);
 
 int angle(int);
 int map(int, int, int, int, int);
+#define 	WHO_AM_I     0x0F
 
+#define     CTRL_REG1    0x20
+#define     CTRL_REG2    0x21
+#define     CTRL_REG3    0x22
+#define     CTRL_REG4    0x23
+#define     CTRL_REG5    0x24
+
+#define     STATUS_REG   0x27
+#define     OUT_X_L      0x28
+#define     OUT_X_H      0x29
+#define     OUT_Y_L      0x2A
+#define     OUT_Y_H      0x2B
+#define     OUT_Z_L      0x2C
+#define     OUT_Z_H      0x2D
+#define     TEMP_OUT_L   0x2E
+#define     TEMP_OUT_H   0x2F
+#define     INT_CFG      0x30
+#define     INT_SRC      0x31
+#define     INT_THS_L    0x32
+#define     INT_THS_H    0x33
 
 int main(void)
 {
+	uint8_t		rx_data,tx_data;
+	uint8_t x[2],y[2],z[2];
 	// Configure System Clock for 48MHz from 8MHz HSE
 	SystemClock_Config();
 
@@ -25,56 +48,66 @@ int main(void)
 	my_printf("SYSCLK = %d Hz\r\n", SystemCoreClock);
 
 	// Initialize I2C1 peripheral
-	i2c_init();
+	BSP_I2C1_Init();
 
 	// Start I2C transaction
-	I2C1->CR2 |= I2C_CR2_START;  // <-- Breakpoint here
+	//I2C1->CR2 |= I2C_CR2_START;  // <-- Breakpoint here
 
+	// BSP_I2C1_Read(0x1E, 0x0F, rx_data, 2); // who am i
+
+	tx_data = 0x70;
+	BSP_I2C1_Write(0x1E, CTRL_REG1, &tx_data, 2);
+	delay_ms(50);
+
+	tx_data = 0x00;
+	BSP_I2C1_Write(0x1E, CTRL_REG1, &tx_data, 2);
+	delay_ms(50);
+
+	tx_data = 0x00;
+	BSP_I2C1_Write(0x1E, CTRL_REG3, &tx_data, 2);
+	delay_ms(50);
+
+	tx_data = 0x0C;
+	BSP_I2C1_Write(0x1E, CTRL_REG4, &tx_data, 2);
+	delay_ms(50);
 
 	while(1)
 	{
+		BSP_I2C1_Read(0x1E, STATUS_REG, &rx_data, 2);
+		//my_printf("Status_reg = 0x%02x\r\n",rx_data);
+
+		if((rx_data & 0x08)==0x08){
+			BSP_I2C1_Read(0x1E, OUT_X_L, &x[0], 2);
+			BSP_I2C1_Read(0x1E, OUT_X_H, &x[1], 2);
+			my_printf("XH = %d\r\n",(uint16_t)(x[1]<<8U | x[0]));
+
+			BSP_I2C1_Read(0x1E, OUT_Y_L, &y[0], 2);
+			BSP_I2C1_Read(0x1E, OUT_Y_H, &y[1], 2);
+			my_printf("YH = %d\r\n",(uint16_t)(y[1]<<8U | y[0]));
+
+			BSP_I2C1_Read(0x1E, OUT_Z_L, &z[0], 2);
+			BSP_I2C1_Read(0x1E, OUT_Z_H, &z[1], 2);
+			my_printf("ZH = %d\r\n",(uint16_t)(z[1]<<8U | z[0]));
+
+			x[0] = 0;
+			x[1] = 0;
+
+			y[0] = 0;
+			y[1] = 0;
+
+			z[0] = 0;
+			z[1] = 0;
+
+			delay_ms(100);
+		}
+
+
+
+
+
 	}
 }
-void i2c_init()
-{
 
-
-	// Enable GPIOB clock
-	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
-
-	// Configure PB8, PB9 as AF mode
-	GPIOB->MODER &= ~(GPIO_MODER_MODER6 | GPIO_MODER_MODER6);
-	GPIOB->MODER |= (0X02 << GPIO_MODER_MODER6_Pos) | (0X02 << GPIO_MODER_MODER7_Pos);
-
-	// Connect to I2C1 (AF1)
-	GPIOB->AFR[0] &= ~(0xFF000000);
-	GPIOB->AFR[0] |=   0x44000000;
-
-	// Setup Open-Drain
-	GPIOB->OTYPER |= GPIO_OTYPER_OT_6 | GPIO_OTYPER_OT_7;
-
-	// Select SYSCLK as I2C1 clock (48MHz)
-	RCC->CFGR3 |= RCC_CFGR3_I2C1SW;
-
-	// Enable I2C1 clock
-	RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
-
-	// Make sure I2C1 is disabled
-	I2C1->CR1 &= ~I2C_CR1_PE;
-
-	// Reset I2C1 Configuration to default values
-	I2C1->CR1 	  = 0x00000000;
-	I2C1->CR2 	  = 0x00000000;
-	I2C1->TIMINGR = 0x00000000;
-
-	// Configure timing for 100kHz, 50% duty cycle
-	I2C1->TIMINGR |= ((4 -1) <<I2C_TIMINGR_PRESC_Pos); // Clock prescaler /4 -> 12MHz
-	I2C1->TIMINGR |= (60 	 <<I2C_TIMINGR_SCLH_Pos);  // High half-period = 5µs
-	I2C1->TIMINGR |= (60     <<I2C_TIMINGR_SCLL_Pos);  // Low  half-period = 5µs
-
-	// Enable I2C1
-	I2C1->CR1 |= I2C_CR1_PE;
-}
 int  angle(int angle_deg){
 
 	return map(angle_deg,0,120,1000,2000);
