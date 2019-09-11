@@ -18,31 +18,24 @@ uint16_t A;
 uint16_t B;
 uint16_t i;
 
+uint8_t	  rx_dma_buffer[16];
 
 int main(void)
 {
-	uint8_t		rx_data,tx_data;
-	uint8_t x[2],y[2],z[2];
 	// Configure System Clock for 48MHz from 8MHz HSE
 	SystemClock_Config();
 
-
+	uart_init();
 	// Initialize Debug Console
 	BSP_Console_Init();
-	servo_init();
+	//servo_init();
 
 	my_printf("\r\n Robot Ready!\r\n");
 
 	while(1)
 	{
 
-		for(int x = 1000; x <= 2000; x++){
-			i=x;
-			//my_printf("d%d\r\n", i);
-			kinematic_bascule(i);
-			delay_ms(10);
 
-		}
 
 	}
 }

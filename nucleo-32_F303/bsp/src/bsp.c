@@ -8,6 +8,85 @@
 #include "stm32f3xx.h"
 #include "bsp.h"
 
+
+
+extern uint8_t rx_dma_buffer[16];
+
+void uart_init()
+{
+	// Enable GPIOA clock
+	RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
+
+	// Configure PA2 and PA3 as Alternate function
+	GPIOA->MODER &= ~(GPIO_MODER_MODER9 | GPIO_MODER_MODER10);
+	GPIOA->MODER |=  (0x02 << GPIO_MODER_MODER9_Pos) | (0x02 << GPIO_MODER_MODER10_Pos);
+
+	// Set PA9 and PA3 to AF10 (USART1)
+	GPIOA->AFR[1] &= ~(0x00000FF0);
+	GPIOA->AFR[1] |=  (0x00000770);
+
+	// Enable USART1 clock
+	RCC -> APB2ENR |= RCC_APB2ENR_USART1EN;
+
+	// Clear USART2 configuration (reset state)
+	// 8-bit, 1 start, 1 stop, CTS/RTS disabled
+	USART1->CR1 = 0x00000000;
+	USART1->CR2 = 0x00000000;
+	USART1->CR3 = 0x00000000;
+
+	RCC->CFGR3 &= ~RCC_CFGR3_USART1SW_Msk;
+
+	// Baud Rate = 115200
+	USART1->CR1 &= ~USART_CR1_OVER8;
+	USART1->BRR = 0x0115;
+
+	// Enable both Transmitter and Receiver
+	USART1->CR1 |= USART_CR1_TE | USART_CR1_RE;
+
+
+	//Start DMA clock
+	RCC->AHBENR |= RCC_AHBENR_DMA1EN;
+
+	//Reset DMA1 channel 5 configuration
+	DMA1_Channel5->CCR &= 0x00000000;
+
+	//Set direction Peripheral to memory
+	DMA1_Channel5->CCR &= ~DMA_CCR_DIR;
+
+	//Péripheral is USART1 RDR
+	DMA1_Channel5->CPAR = (uint32_t)&USART1->RDR;
+
+	//peripheral data size is 8-bit (byte)
+	DMA1_Channel5->CCR |= (0x00<<DMA_CCR_PSIZE_Pos);
+
+	//Disable auto-increment Peripheral adress
+	DMA1_Channel5->CCR &= ~DMA_CCR_PINC;
+
+	// Memory is rx_dma_buffer
+	DMA1_Channel5->CMAR = (uint32_t)rx_dma_buffer;
+
+	// Memory data size is 8-bit (byte)
+	DMA1_Channel5->CCR |= (0x00 <<DMA_CCR_MSIZE_Pos);
+
+	// Enable auto-increment Memory address
+	DMA1_Channel5->CCR |= DMA_CCR_MINC;
+
+	// Set Memory Buffer size
+	DMA1_Channel5->CNDTR = 8;
+
+	// DMA mode is circular
+	DMA1_Channel5->CCR |= DMA_CCR_CIRC;
+
+	// Enable DMA1 Channel 5
+	DMA1_Channel5->CCR |= DMA_CCR_EN;
+
+	// Enable USART2 DMA Request on RX
+	USART1->CR3 |= USART_CR3_DMAR;
+
+	// Enable USART2
+	USART1->CR1 |= USART_CR1_UE;
+}
+
 void BSP_Console_Init()
 {
 	// Enable GPIOA clock
@@ -36,6 +115,46 @@ void BSP_Console_Init()
 
 	// Enable both Transmitter and Receiver
 	USART2->CR1 |= USART_CR1_TE | USART_CR1_RE;
+
+
+	//Start DMA clock
+	RCC->AHBENR |= RCC_AHBENR_DMA1EN;
+
+	//Reset DMA1 channel 6 configuration
+	DMA1_Channel6->CCR &= 0x00000000;
+
+	//Set direction Peripheral to memory
+	DMA1_Channel6->CCR &= ~DMA_CCR_DIR;
+
+	//Péripheral is USART2 RDR
+	DMA1_Channel6->CPAR = (uint32_t)&USART2->RDR;
+
+	//peripheral data size is 8-bit (byte)
+	DMA1_Channel6->CCR |= (0x00<<DMA_CCR_PSIZE_Pos);
+
+	//Disable auto-increment Peripheral adress
+	DMA1_Channel6->CCR &= ~DMA_CCR_PINC;
+
+	// Memory is rx_dma_buffer
+	DMA1_Channel6->CMAR = (uint32_t)rx_dma_buffer;
+
+	// Memory data size is 8-bit (byte)
+	DMA1_Channel6->CCR |= (0x00 <<DMA_CCR_MSIZE_Pos);
+
+		// Enable auto-increment Memory address
+	DMA1_Channel6->CCR |= DMA_CCR_MINC;
+
+		// Set Memory Buffer size
+	DMA1_Channel6->CNDTR = 8;
+
+	// DMA mode is circular
+	DMA1_Channel6->CCR |= DMA_CCR_CIRC;
+
+	// Enable DMA1 Channel 5
+	DMA1_Channel6->CCR |= DMA_CCR_EN;
+
+	// Enable USART2 DMA Request on RX
+	USART2->CR3 |= USART_CR3_DMAR;
 
 	// Enable USART2
 	USART2->CR1 |= USART_CR1_UE;
