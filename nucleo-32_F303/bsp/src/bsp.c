@@ -9,6 +9,12 @@
 #include "bsp.h"
 
 
+void BSP_NVIC_Init(){
+
+	NVIC_SetPriority(USART1_IRQn, 1);
+	NVIC_EnableIRQ(USART1_IRQn);
+
+}
 
 extern uint8_t rx_dma_buffer[16];
 
@@ -72,16 +78,25 @@ void uart_init()
 	DMA1_Channel5->CCR |= DMA_CCR_MINC;
 
 	// Set Memory Buffer size
-	DMA1_Channel5->CNDTR = 8;
+	DMA1_Channel5->CNDTR = 16;
 
 	// DMA mode is circular
-	DMA1_Channel5->CCR |= DMA_CCR_CIRC;
+	//DMA1_Channel5->CCR |= DMA_CCR_CIRC;
+	DMA1_Channel5->CCR &= ~DMA_CCR_CIRC;
 
 	// Enable DMA1 Channel 5
 	DMA1_Channel5->CCR |= DMA_CCR_EN;
 
 	// Enable USART2 DMA Request on RX
 	USART1->CR3 |= USART_CR3_DMAR;
+
+	USART1->RTOR = 120;
+
+	// Enable RTO and RTO interrupt
+	USART1->CR2 |= USART_CR2_RTOEN;
+	USART1->CR1 |= USART_CR1_RTOIE;
+
+
 
 	// Enable USART2
 	USART1->CR1 |= USART_CR1_UE;

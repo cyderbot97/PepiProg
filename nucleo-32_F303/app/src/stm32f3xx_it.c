@@ -38,6 +38,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f3xx_it.h"
+#include "stm32f3xx.h"
    
 /** @addtogroup STM32F3xx_HAL_Examples
   * @{
@@ -163,6 +164,22 @@ void SysTick_Handler(void)
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32f3xx.s).                                               */
 /******************************************************************************/
+extern uint8_t irq;
+
+
+void USART1_IRQHandler(){
+
+	if ((USART1->ISR & USART_ISR_RTOF) == USART_ISR_RTOF)
+		{
+			// Clear the interrupt pending bit
+			//USART1->ISR &= ~USART_ISR_RTOF;
+			USART1->ICR |= USART_ICR_RTOCF;
+			// Set global variable
+			irq = 1;
+
+		}
+
+}
 
 /**
   * @brief  This function handles PPP interrupt request.

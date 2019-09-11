@@ -19,22 +19,26 @@ uint16_t B;
 uint16_t i;
 
 uint8_t	  rx_dma_buffer[16];
+uint8_t	  irq;
 
 int main(void)
 {
-	// Configure System Clock for 48MHz from 8MHz HSE
 	SystemClock_Config();
 
 	uart_init();
+
+	BSP_NVIC_Init();
+
 	// Initialize Debug Console
 	BSP_Console_Init();
-	//servo_init();
 
 	my_printf("\r\n Robot Ready!\r\n");
-
 	while(1)
 	{
-
+		if(irq==1){
+			delay_ms(100);
+			irq = 0;
+		}
 
 
 	}

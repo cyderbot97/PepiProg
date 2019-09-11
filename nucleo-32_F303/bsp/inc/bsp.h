@@ -16,7 +16,8 @@
 
 void adc_init	(void);
 void servo_init (void);
-
+void uart_init(void);
+void BSP_NVIC_Init(void);
 
 /*
  * Debug Console driver functions
