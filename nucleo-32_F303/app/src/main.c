@@ -11,28 +11,13 @@ void i2c_init(void);
 static uint8_t SystemClock_Config(void);
 
 int angle(int);
-int map(int, int, int, int, int);
-#define 	WHO_AM_I     0x0F
+uint16_t map(uint16_t, uint16_t, uint16_t, uint16_t, uint16_t);
+void kinematic_bascule(uint16_t);
 
-#define     CTRL_REG1    0x20
-#define     CTRL_REG2    0x21
-#define     CTRL_REG3    0x22
-#define     CTRL_REG4    0x23
-#define     CTRL_REG5    0x24
+uint16_t A;
+uint16_t B;
+uint16_t i;
 
-#define     STATUS_REG   0x27
-#define     OUT_X_L      0x28
-#define     OUT_X_H      0x29
-#define     OUT_Y_L      0x2A
-#define     OUT_Y_H      0x2B
-#define     OUT_Z_L      0x2C
-#define     OUT_Z_H      0x2D
-#define     TEMP_OUT_L   0x2E
-#define     TEMP_OUT_H   0x2F
-#define     INT_CFG      0x30
-#define     INT_SRC      0x31
-#define     INT_THS_L    0x32
-#define     INT_THS_H    0x33
 
 int main(void)
 {
@@ -44,76 +29,61 @@ int main(void)
 
 	// Initialize Debug Console
 	BSP_Console_Init();
-	my_printf("\r\nConsole Ready!\r\n");
-	my_printf("SYSCLK = %d Hz\r\n", SystemCoreClock);
+	servo_init();
 
-	// Initialize I2C1 peripheral
-	BSP_I2C1_Init();
-
-	// Start I2C transaction
-	//I2C1->CR2 |= I2C_CR2_START;  // <-- Breakpoint here
-
-	// BSP_I2C1_Read(0x1E, 0x0F, rx_data, 2); // who am i
-
-	tx_data = 0x70;
-	BSP_I2C1_Write(0x1E, CTRL_REG1, &tx_data, 2);
-	delay_ms(50);
-
-	tx_data = 0x00;
-	BSP_I2C1_Write(0x1E, CTRL_REG1, &tx_data, 2);
-	delay_ms(50);
-
-	tx_data = 0x00;
-	BSP_I2C1_Write(0x1E, CTRL_REG3, &tx_data, 2);
-	delay_ms(50);
-
-	tx_data = 0x0C;
-	BSP_I2C1_Write(0x1E, CTRL_REG4, &tx_data, 2);
-	delay_ms(50);
+	my_printf("\r\n Robot Ready!\r\n");
 
 	while(1)
 	{
-		BSP_I2C1_Read(0x1E, STATUS_REG, &rx_data, 2);
-		//my_printf("Status_reg = 0x%02x\r\n",rx_data);
 
-		if((rx_data & 0x08)==0x08){
-			BSP_I2C1_Read(0x1E, OUT_X_L, &x[0], 2);
-			BSP_I2C1_Read(0x1E, OUT_X_H, &x[1], 2);
-			my_printf("XH = %d\r\n",(uint16_t)(x[1]<<8U | x[0]));
+		for(int x = 1000; x <= 2000; x++){
+			i=x;
+			//my_printf("d%d\r\n", i);
+			kinematic_bascule(i);
+			delay_ms(10);
 
-			BSP_I2C1_Read(0x1E, OUT_Y_L, &y[0], 2);
-			BSP_I2C1_Read(0x1E, OUT_Y_H, &y[1], 2);
-			my_printf("YH = %d\r\n",(uint16_t)(y[1]<<8U | y[0]));
-
-			BSP_I2C1_Read(0x1E, OUT_Z_L, &z[0], 2);
-			BSP_I2C1_Read(0x1E, OUT_Z_H, &z[1], 2);
-			my_printf("ZH = %d\r\n",(uint16_t)(z[1]<<8U | z[0]));
-
-			x[0] = 0;
-			x[1] = 0;
-
-			y[0] = 0;
-			y[1] = 0;
-
-			z[0] = 0;
-			z[1] = 0;
-
-			delay_ms(100);
 		}
-
-
-
-
 
 	}
 }
 
-int  angle(int angle_deg){
+void kinematic_bascule(uint16_t inclinaison_pulse){
 
-	return map(angle_deg,0,120,1000,2000);
+	//calculate pulse width for 2 bascule motor
+	//state machine
+
+	if((inclinaison_pulse <= 1500) && (inclinaison_pulse >= 1350)){
+
+		//set PWM motor value
+		//just for try
+		A = 1500 - (1500-inclinaison_pulse) * 3;
+		B = inclinaison_pulse;
+
+		TIM1->CCR1 = 1500 - (1500-inclinaison_pulse) * 3;
+		TIM1->CCR2 = inclinaison_pulse;
+
+	}else if((inclinaison_pulse <= 1650) && (inclinaison_pulse >= 1500)){ // 1650 = 78 deg
+
+		//just for try
+		B = inclinaison_pulse + (inclinaison_pulse - 1500)*3;
+		A = inclinaison_pulse;
+
+		//set PWM motor value
+		TIM1->CCR1 = inclinaison_pulse + (inclinaison_pulse - 1000)*3;
+		TIM1->CCR2 = inclinaison_pulse;
+
+	}else {
+		B = 1500;
+		A = 1500;
+		// error do nothing
+	}
+
+
 }
 
-int map(int x, int in_min, int in_max, int out_min, int out_max) {
+
+uint16_t map(uint16_t x, uint16_t in_min, uint16_t in_max, uint16_t out_min, uint16_t out_max) {
+
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
