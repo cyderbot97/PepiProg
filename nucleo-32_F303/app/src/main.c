@@ -19,6 +19,8 @@ uint16_t B;
 uint16_t i;
 
 uint8_t	  rx_dma_buffer[16];
+uint8_t	  rx_dma_buffer_bis[16];
+uint8_t data;
 uint8_t	  irq;
 
 int main(void)
@@ -36,7 +38,41 @@ int main(void)
 	while(1)
 	{
 		if(irq==1){
-			delay_ms(100);
+			//disable USART
+			USART1->CR1 &= ~USART_CR1_UE;
+
+			//check SOF bytes
+			//if((rx_dma_buffer[0]=='9') && (rx_dma_buffer[1]=='7'))
+			if(rx_dma_buffer[0]=='A')
+			{
+				data = rx_dma_buffer[1] - 0x30;
+				for(i=0; i<16; i++)
+					{
+						rx_dma_buffer_bis[i] = rx_dma_buffer[i];
+					}
+				my_printf("\r\n Good data!\r\n");
+			}
+			else
+			{
+				my_printf("\r\n Wrong data!\r\n");
+
+			}
+
+			// Make sure DMA1 Stream1 is disabled
+			while ( (DMA1_Channel5->CCR & DMA_CCR_EN) != 0)
+			{
+				DMA1_Channel5->CCR &= ~DMA_CCR_EN;
+			}
+
+			// Number of data items to transfer
+			DMA1_Channel5->CNDTR = 16;
+
+			// Enable DMA1 Stream 1
+			DMA1_Channel5->CCR |= DMA_CCR_EN;
+
+			// Enable USART2
+			USART1->CR1 |= USART_CR1_UE;
+
 			irq = 0;
 		}
 
