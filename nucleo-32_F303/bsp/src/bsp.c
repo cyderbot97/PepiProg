@@ -14,6 +14,9 @@ void BSP_NVIC_Init(){
 	NVIC_SetPriority(USART1_IRQn, 1);
 	NVIC_EnableIRQ(USART1_IRQn);
 
+	NVIC_SetPriority(TIM6_DAC_IRQn, 2);
+	NVIC_EnableIRQ(TIM6_DAC_IRQn);
+
 }
 
 extern uint8_t rx_dma_buffer[16];
@@ -227,15 +230,15 @@ void servo_init(void)
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
 
 	//
-	GPIOA->MODER &= ~(GPIO_MODER_MODER8_Msk | GPIO_MODER_MODER9_Msk | GPIO_MODER_MODER10_Msk| GPIO_MODER_MODER11_Msk );
-	GPIOA->MODER |= (0x02<<GPIO_MODER_MODER8_Pos)| (0x02<<GPIO_MODER_MODER9_Pos)| (0x02<<GPIO_MODER_MODER10_Pos)| (0x02<<GPIO_MODER_MODER11_Pos);
+	GPIOA->MODER &= ~(GPIO_MODER_MODER8_Msk | GPIO_MODER_MODER11_Msk );
+	GPIOA->MODER |= (0x02<<GPIO_MODER_MODER8_Pos)| (0x02<<GPIO_MODER_MODER11_Pos);
 
 	GPIOB->MODER &= ~(GPIO_MODER_MODER0_Msk | GPIO_MODER_MODER1_Msk | GPIO_MODER_MODER4_Msk| GPIO_MODER_MODER5_Msk );
 	GPIOB->MODER |= (0x02<<GPIO_MODER_MODER0_Pos)| (0x02<<GPIO_MODER_MODER1_Pos)| (0x02<<GPIO_MODER_MODER4_Pos)| (0x02<<GPIO_MODER_MODER5_Pos);
 
 	//Set alternate function
-	GPIOA->AFR[1] &= ~(0x0000FFFF);
-	GPIOA->AFR[1] |=  (0x0000B666);
+	GPIOA->AFR[1] &= ~(0x0000F00F);
+	GPIOA->AFR[1] |=  (0x0000B006);
 
 	GPIOB->AFR[0] &= ~(0x00FF00FF);
 	GPIOB->AFR[0] |=  (0x00220022);
@@ -300,9 +303,37 @@ void servo_init(void)
 	TIM1->BDTR |= TIM_BDTR_MOE;
 	//TIM3->BDTR |= TIM_BDTR_MOE;
 
-	// Enable TIM2
+	// Enable TIM3 and TIM1
 	TIM1->CR1 |= TIM_CR1_CEN;
 	TIM3->CR1 |= TIM_CR1_CEN;
+}
+
+void BSP_LED_Init()
+{
+	// Enable GPIOB clock
+	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
+
+	// Configure PB3 as output
+	GPIOB->MODER &= ~GPIO_MODER_MODER3;
+	GPIOB->MODER |= (0x01 <<6U);
+
+	// Configure PB3 as Push-Pull output
+	GPIOB->OTYPER &= ~GPIO_OTYPER_OT_3;
+
+	// Configure PB3 as High-Speed Output
+	GPIOB->OSPEEDR &= ~GPIO_OSPEEDER_OSPEEDR3_Msk;
+	GPIOB->OSPEEDR |= (0x03 <<GPIO_OSPEEDER_OSPEEDR3_Pos);
+
+	// Disable PB3 Pull-up/Pull-down
+	GPIOB->PUPDR &= ~GPIO_PUPDR_PUPDR3_Msk;
+
+	// Set Initial State OFF
+	GPIOB->BSRR = GPIO_BSRR_BR_3;
+}
+
+void BSP_LED_Toggle()
+{
+	GPIOB->ODR ^= GPIO_ODR_3;
 }
 
 

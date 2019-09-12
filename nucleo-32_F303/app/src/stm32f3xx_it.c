@@ -181,6 +181,40 @@ void USART1_IRQHandler(){
 
 }
 
+extern uint8_t timebase_irq;
+extern uint16_t inclinaison;
+extern uint16_t consigne;
+
+void TIM6_DAC_IRQHandler()
+{
+	// Test for TIM6 update pending interrupt
+	if ((TIM6->SR & TIM_SR_UIF) == TIM_SR_UIF)
+	{
+		// Clear pending interrupt flag
+		TIM6->SR &= ~TIM_SR_UIF;
+
+		// Do what you need
+		timebase_irq = 1;
+		BSP_LED_Toggle();
+
+
+		if(consigne > inclinaison){
+			inclinaison = inclinaison+1;
+			kinematic_bascule(inclinaison);
+
+		}else if(consigne < inclinaison){
+			inclinaison = inclinaison-1;
+			kinematic_bascule(inclinaison);
+
+		}else{
+			// nothing
+		}
+
+
+	}
+}
+
+
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None

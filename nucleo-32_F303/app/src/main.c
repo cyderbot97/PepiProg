@@ -20,14 +20,22 @@ uint16_t i;
 
 uint8_t	  rx_dma_buffer[16];
 uint8_t	  rx_dma_buffer_bis[16];
-uint8_t data;
+uint16_t data;
 uint8_t	  irq;
+
+uint16_t consigne;
+uint16_t inclinaison;
+
+uint8_t timebase_irq;
 
 int main(void)
 {
 	SystemClock_Config();
 
 	uart_init();
+	servo_init();
+	BSP_TIMER_Timebase_Init();
+	BSP_LED_Init();
 
 	BSP_NVIC_Init();
 
@@ -37,20 +45,31 @@ int main(void)
 	my_printf("\r\n Robot Ready!\r\n");
 	while(1)
 	{
+		/*
+		 * Bluetooth data receive and process
+		 */
 		if(irq==1){
 			//disable USART
 			USART1->CR1 &= ~USART_CR1_UE;
 
 			//check SOF bytes
-			//if((rx_dma_buffer[0]=='9') && (rx_dma_buffer[1]=='7'))
-			if(rx_dma_buffer[0]=='A')
+			if(rx_dma_buffer[0]=='S') //0x41
 			{
-				data = rx_dma_buffer[1] - 0x30;
-				for(i=0; i<16; i++)
-					{
-						rx_dma_buffer_bis[i] = rx_dma_buffer[i];
-					}
-				my_printf("\r\n Good data!\r\n");
+				if(rx_dma_buffer[1]=='X') //Go Foward
+				{
+					consigne = rx_dma_buffer[2]<<8 | rx_dma_buffer[3];
+					kinematic_bascule(data);
+					my_printf("\r\n consigne X = %d\r\n",consigne);
+				}
+				else if(rx_dma_buffer[1]=='Y') //Go backward
+				{
+					data = rx_dma_buffer[2]<<8 | rx_dma_buffer[3];
+					my_printf("\r\n Y = %d\r\n",data);
+				}
+				else //Stop everything
+				{
+					my_printf("\r\n Stop \r\n");
+				}
 			}
 			else
 			{
@@ -80,8 +99,35 @@ int main(void)
 	}
 }
 
+void BSP_TIMER_Timebase_Init()
+{
+	// Enable TIM6 clock
+	RCC->APB1ENR |= RCC_APB1ENR_TIM6EN;
+
+	// Reset TIM6 configuration
+	TIM6->CR1 = 0x0000;
+	TIM6->CR2 = 0x0000;
+
+	// Set TIM6 prescaler
+	// Fck = 64MHz -> /64 = 1MHz counting frequency
+	TIM6->PSC = (uint16_t) 64 -1;
+
+	// Set TIM6 auto-reload register for 1ms
+	TIM6->ARR = (uint16_t) 10000 -1;
+
+	// Enable auto-reload preload
+	TIM6->CR1 |= TIM_CR1_ARPE;
+
+	// Enable Interrupt upon Update Event
+	TIM6->DIER |= TIM_DIER_UIE;
+
+	// Start TIM6 counter
+	TIM6->CR1 |= TIM_CR1_CEN;
+}
+
 void kinematic_bascule(uint16_t inclinaison_pulse){
 
+	//
 	//calculate pulse width for 2 bascule motor
 	//state machine
 
@@ -92,22 +138,25 @@ void kinematic_bascule(uint16_t inclinaison_pulse){
 		A = 1500 - (1500-inclinaison_pulse) * 3;
 		B = inclinaison_pulse;
 
-		TIM1->CCR1 = 1500 - (1500-inclinaison_pulse) * 3;
-		TIM1->CCR2 = inclinaison_pulse;
+		TIM3->CCR1 = 1500 - (1500-inclinaison_pulse) * 3;
+		TIM3->CCR2 = inclinaison_pulse;
 
 	}else if((inclinaison_pulse <= 1650) && (inclinaison_pulse >= 1500)){ // 1650 = 78 deg
 
 		//just for try
-		B = inclinaison_pulse + (inclinaison_pulse - 1500)*3;
+		B = 1500 + (inclinaison_pulse - 1500)*3;
 		A = inclinaison_pulse;
 
 		//set PWM motor value
-		TIM1->CCR1 = inclinaison_pulse + (inclinaison_pulse - 1000)*3;
-		TIM1->CCR2 = inclinaison_pulse;
+		TIM3->CCR1 = inclinaison_pulse + (inclinaison_pulse - 1500)*3;
+		TIM3->CCR2 = inclinaison_pulse;
 
 	}else {
 		B = 1500;
 		A = 1500;
+
+		TIM3->CCR1 = 1500;
+		TIM3->CCR2 = 1500;
 		// error do nothing
 	}
 
