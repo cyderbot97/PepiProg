@@ -18,6 +18,31 @@ void BSP_NVIC_Init(){
 	NVIC_EnableIRQ(TIM6_DAC_IRQn);
 
 }
+void BSP_TIMER_Timebase_Init()
+{
+	// Enable TIM6 clock
+	RCC->APB1ENR |= RCC_APB1ENR_TIM6EN;
+
+	// Reset TIM6 configuration
+	TIM6->CR1 = 0x0000;
+	TIM6->CR2 = 0x0000;
+
+	// Set TIM6 prescaler
+	// Fck = 64MHz -> /64 = 1MHz counting frequency
+	TIM6->PSC = (uint16_t) 64 -1;
+
+	// Set TIM6 auto-reload register for 1ms
+	TIM6->ARR = (uint16_t) 10000 -1;
+
+	// Enable auto-reload preload
+	TIM6->CR1 |= TIM_CR1_ARPE;
+
+	// Enable Interrupt upon Update Event
+	TIM6->DIER |= TIM_DIER_UIE;
+
+	// Start TIM6 counter
+	TIM6->CR1 |= TIM_CR1_CEN;
+}
 
 extern uint8_t rx_dma_buffer[16];
 

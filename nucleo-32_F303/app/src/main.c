@@ -13,6 +13,7 @@ static uint8_t SystemClock_Config(void);
 int angle(int);
 uint16_t map(uint16_t, uint16_t, uint16_t, uint16_t, uint16_t);
 void kinematic_bascule(uint16_t);
+void MAE(void);
 
 uint16_t A;
 uint16_t B;
@@ -28,15 +29,23 @@ uint16_t inclinaison;
 
 uint8_t timebase_irq;
 
+
+uint8_t ETAT;
+
+
 int main(void)
 {
+	consigne = 1500;
+	inclinaison = 1500;
+	kinematic_bascule(1500);
+	ETAT = 0;
+
 	SystemClock_Config();
 
 	uart_init();
 	servo_init();
 	BSP_TIMER_Timebase_Init();
 	BSP_LED_Init();
-
 	BSP_NVIC_Init();
 
 	// Initialize Debug Console
@@ -55,6 +64,7 @@ int main(void)
 			//check SOF bytes
 			if(rx_dma_buffer[0]=='S') //0x41
 			{
+				//check command bytes
 				if(rx_dma_buffer[1]=='X') //Go Foward
 				{
 					consigne = rx_dma_buffer[2]<<8 | rx_dma_buffer[3];
@@ -65,6 +75,11 @@ int main(void)
 				{
 					data = rx_dma_buffer[2]<<8 | rx_dma_buffer[3];
 					my_printf("\r\n Y = %d\r\n",data);
+				}
+				else if(rx_dma_buffer[1]=='E')
+				{
+					ETAT = rx_dma_buffer[2];
+					my_printf("\r\n ETAT = %d\r\n",ETAT);
 				}
 				else //Stop everything
 				{
@@ -95,35 +110,44 @@ int main(void)
 			irq = 0;
 		}
 
+		MAE();
+
 
 	}
 }
 
-void BSP_TIMER_Timebase_Init()
-{
-	// Enable TIM6 clock
-	RCC->APB1ENR |= RCC_APB1ENR_TIM6EN;
+void MAE(void){
+	switch(ETAT){
 
-	// Reset TIM6 configuration
-	TIM6->CR1 = 0x0000;
-	TIM6->CR2 = 0x0000;
+	case 0:
+		consigne = 1500;
+		//consigne = inclinaison; //experimental stop action
+		break;
+	case 1:
+		consigne = 1650;
+		if(inclinaison == 1650){
+			ETAT = 2;
 
-	// Set TIM6 prescaler
-	// Fck = 64MHz -> /64 = 1MHz counting frequency
-	TIM6->PSC = (uint16_t) 64 -1;
+		}
+		break;
+	case 2:
+		consigne = 1350;
+		if(inclinaison == 1350){
+			ETAT = 1;
+		}
+		break;
 
-	// Set TIM6 auto-reload register for 1ms
-	TIM6->ARR = (uint16_t) 10000 -1;
-
-	// Enable auto-reload preload
-	TIM6->CR1 |= TIM_CR1_ARPE;
-
-	// Enable Interrupt upon Update Event
-	TIM6->DIER |= TIM_DIER_UIE;
-
-	// Start TIM6 counter
-	TIM6->CR1 |= TIM_CR1_CEN;
+	default:
+		ETAT = 0;
+		break;
+	}
 }
+
+
+
+
+
+
 
 void kinematic_bascule(uint16_t inclinaison_pulse){
 
@@ -152,11 +176,11 @@ void kinematic_bascule(uint16_t inclinaison_pulse){
 		TIM3->CCR2 = inclinaison_pulse;
 
 	}else {
-		B = 1500;
-		A = 1500;
+		//B = 1500;
+		//A = 1500;
 
-		TIM3->CCR1 = 1500;
-		TIM3->CCR2 = 1500;
+		//TIM3->CCR1 = 1500;
+		//TIM3->CCR2 = 1500;
 		// error do nothing
 	}
 

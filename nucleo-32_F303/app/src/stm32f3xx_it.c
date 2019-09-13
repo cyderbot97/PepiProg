@@ -195,7 +195,7 @@ void TIM6_DAC_IRQHandler()
 
 		// Do what you need
 		timebase_irq = 1;
-		BSP_LED_Toggle();
+		//BSP_LED_Toggle();
 
 
 		if(consigne > inclinaison){
@@ -206,11 +206,7 @@ void TIM6_DAC_IRQHandler()
 			inclinaison = inclinaison-1;
 			kinematic_bascule(inclinaison);
 
-		}else{
-			// nothing
 		}
-
-
 	}
 }
 
