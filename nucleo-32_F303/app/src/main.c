@@ -17,6 +17,8 @@ void MAE(void);
 
 uint16_t A;
 uint16_t B;
+uint16_t C;
+uint16_t D;
 uint16_t i;
 
 uint8_t	  rx_dma_buffer[16];
@@ -32,6 +34,7 @@ uint8_t timebase_irq;
 
 uint8_t ETAT;
 
+uint8_t MODE;
 
 int main(void)
 {
@@ -39,6 +42,7 @@ int main(void)
 	inclinaison = 1500;
 	kinematic_bascule(1500);
 	ETAT = 0;
+	MODE = 1;
 
 	SystemClock_Config();
 
@@ -54,6 +58,14 @@ int main(void)
 	my_printf("\r\n Robot Ready!\r\n");
 	while(1)
 	{
+
+		/*
+		 * Check state
+		 */
+		if(MODE == 0){ //Mode auto
+			MAE();
+		}
+
 		/*
 		 * Bluetooth data receive and process
 		 */
@@ -65,7 +77,7 @@ int main(void)
 			if(rx_dma_buffer[0]=='S') //0x41
 			{
 				//check command bytes
-				if(rx_dma_buffer[1]=='X') //Go Foward
+				if(rx_dma_buffer[1]=='X') //Go Foward // 58
 				{
 					consigne = rx_dma_buffer[2]<<8 | rx_dma_buffer[3];
 					kinematic_bascule(data);
@@ -76,13 +88,18 @@ int main(void)
 					data = rx_dma_buffer[2]<<8 | rx_dma_buffer[3];
 					my_printf("\r\n Y = %d\r\n",data);
 				}
-				else if(rx_dma_buffer[1]=='E')
+				else if(rx_dma_buffer[1]=='E') //force states //45
 				{
 					ETAT = rx_dma_buffer[2];
 					my_printf("\r\n ETAT = %d\r\n",ETAT);
 				}
+				else if(rx_dma_buffer[1]=='M') //force states //4d
+				{
+					MODE = rx_dma_buffer[2];
+				}
 				else //Stop everything
 				{
+
 					my_printf("\r\n Stop \r\n");
 				}
 			}
@@ -110,9 +127,6 @@ int main(void)
 			irq = 0;
 		}
 
-		MAE();
-
-
 	}
 }
 
@@ -121,21 +135,39 @@ void MAE(void){
 
 	case 0:
 		consigne = 1500;
-		//consigne = inclinaison; //experimental stop action
+		TIM3->CCR4 = 1500;
+		TIM3->CCR3 = 1500;
 		break;
-	case 1:
-		consigne = 1650;
-		if(inclinaison == 1650){
-			ETAT = 2;
 
+	case 1:	//bascule
+		consigne = 1750;
+		if(inclinaison == 1750){
+			ETAT = 2;
 		}
 		break;
-	case 2:
-		consigne = 1350;
-		if(inclinaison == 1350){
-			ETAT = 1;
+
+	case 2: //pas avant
+		TIM3->CCR4 = 1350;
+		TIM3->CCR3 = 1350;
+		delay_ms(500);
+		ETAT = 3;
+		break;
+
+	case 3: //bascule
+		consigne = 1250;
+		if(inclinaison == 1250){
+			ETAT = 4;
 		}
 		break;
+
+	case 4: //pas avant
+
+		TIM3->CCR4 = 1650;
+		TIM3->CCR3 = 1650;
+		delay_ms(500);
+		ETAT = 1;
+		break;
+
 
 	default:
 		ETAT = 0;
@@ -155,25 +187,32 @@ void kinematic_bascule(uint16_t inclinaison_pulse){
 	//calculate pulse width for 2 bascule motor
 	//state machine
 
-	if((inclinaison_pulse <= 1500) && (inclinaison_pulse >= 1350)){
+	if((inclinaison_pulse <= 1500) && (inclinaison_pulse >= 1000)){
 
-		//set PWM motor value
-		//just for try
+		//calcul
 		A = 1500 - (1500-inclinaison_pulse) * 3;
 		B = inclinaison_pulse;
 
-		TIM3->CCR1 = 1500 - (1500-inclinaison_pulse) * 3;
-		TIM3->CCR2 = inclinaison_pulse;
+		if(A<1000){
+			A = 1000;
+		}
 
-	}else if((inclinaison_pulse <= 1650) && (inclinaison_pulse >= 1500)){ // 1650 = 78 deg
+		TIM3->CCR1 = A;
+		TIM3->CCR2 = B;
 
-		//just for try
+	}else if((inclinaison_pulse <= 2000) && (inclinaison_pulse >= 1500)){ // 1650 = 78 deg
+
+		//Calcul
 		B = 1500 + (inclinaison_pulse - 1500)*3;
 		A = inclinaison_pulse;
 
+		if(B>2000) {
+			B = 2000;
+		}
+
 		//set PWM motor value
-		TIM3->CCR1 = inclinaison_pulse + (inclinaison_pulse - 1500)*3;
-		TIM3->CCR2 = inclinaison_pulse;
+		TIM3->CCR2 = B;
+		TIM3->CCR1 = A;
 
 	}else {
 		//B = 1500;

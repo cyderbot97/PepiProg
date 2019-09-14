@@ -32,7 +32,7 @@ void BSP_TIMER_Timebase_Init()
 	TIM6->PSC = (uint16_t) 64 -1;
 
 	// Set TIM6 auto-reload register for 1ms
-	TIM6->ARR = (uint16_t) 10000 -1;
+	TIM6->ARR = (uint16_t) 1000 -1;
 
 	// Enable auto-reload preload
 	TIM6->CR1 |= TIM_CR1_ARPE;
