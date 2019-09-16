@@ -135,36 +135,36 @@ void MAE(void){
 
 	case 0:
 		consigne = 1500;
-		TIM3->CCR4 = 1500;
-		TIM3->CCR3 = 1500;
+		TIM3->CCR4 = 1490;
+		TIM3->CCR3 = 1450;
 		break;
 
 	case 1:	//bascule
-		consigne = 1750;
-		if(inclinaison == 1750){
+		consigne = 1820;
+		if(inclinaison == consigne){
 			ETAT = 2;
 		}
 		break;
 
 	case 2: //pas avant
-		TIM3->CCR4 = 1350;
+		TIM3->CCR4 = 1390;
 		TIM3->CCR3 = 1350;
-		delay_ms(500);
+		//delay_ms(1000);
 		ETAT = 3;
 		break;
 
 	case 3: //bascule
-		consigne = 1250;
-		if(inclinaison == 1250){
+		consigne = 1260;
+		if(inclinaison == consigne){
 			ETAT = 4;
 		}
 		break;
 
 	case 4: //pas avant
 
-		TIM3->CCR4 = 1650;
-		TIM3->CCR3 = 1650;
-		delay_ms(500);
+		TIM3->CCR4 = 1590;
+		TIM3->CCR3 = 1550;
+		//delay_ms(1000);
 		ETAT = 1;
 		break;
 
