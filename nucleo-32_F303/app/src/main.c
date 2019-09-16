@@ -27,7 +27,10 @@ uint16_t data;
 uint8_t	  irq;
 
 uint16_t consigne;
+uint16_t consigne_T;
+
 uint16_t inclinaison;
+uint16_t torsion;
 
 uint8_t timebase_irq;
 
@@ -39,10 +42,14 @@ uint8_t MODE;
 int main(void)
 {
 	consigne = 1500;
+	consigne_T = 1500;
+
 	inclinaison = 1500;
+
 	kinematic_bascule(1500);
+	kinematic_torsion(1500);
 	ETAT = 0;
-	MODE = 1;
+	MODE = 0;
 
 	SystemClock_Config();
 
@@ -56,15 +63,28 @@ int main(void)
 	BSP_Console_Init();
 
 	my_printf("\r\n Robot Ready!\r\n");
+
 	while(1)
 	{
 
 		/*
 		 * Check state
 		 */
-		if(MODE == 0){ //Mode auto
+		if((MODE == 0)&&(timebase_irq == 1))
+		{
+			kinematic_bascule(inclinaison); //auto
+			kinematic_torsion(torsion);
 			MAE();
+			timebase_irq = 0;
 		}
+		else
+		{
+			kinematic_bascule(inclinaison); //manu
+		}
+
+		/*
+		 * END process state
+		 */
 
 		/*
 		 * Bluetooth data receive and process
@@ -79,23 +99,18 @@ int main(void)
 				//check command bytes
 				if(rx_dma_buffer[1]=='X') //Go Foward // 58
 				{
-					consigne = rx_dma_buffer[2]<<8 | rx_dma_buffer[3];
+					consigne = (rx_dma_buffer[2]-'0')*1000 + (rx_dma_buffer[3]-'0')*100 + (rx_dma_buffer[4]-'0')*10 + (rx_dma_buffer[5]-'0')*1;
 					kinematic_bascule(data);
 					my_printf("\r\n consigne X = %d\r\n",consigne);
 				}
-				else if(rx_dma_buffer[1]=='Y') //Go backward
-				{
-					data = rx_dma_buffer[2]<<8 | rx_dma_buffer[3];
-					my_printf("\r\n Y = %d\r\n",data);
-				}
 				else if(rx_dma_buffer[1]=='E') //force states //45
 				{
-					ETAT = rx_dma_buffer[2];
+					ETAT = rx_dma_buffer[2]-'0';
 					my_printf("\r\n ETAT = %d\r\n",ETAT);
 				}
 				else if(rx_dma_buffer[1]=='M') //force states //4d
 				{
-					MODE = rx_dma_buffer[2];
+					MODE = rx_dma_buffer[2]-'0';
 				}
 				else //Stop everything
 				{
@@ -109,7 +124,7 @@ int main(void)
 
 			}
 
-			// Make sure DMA1 Stream1 is disabled
+			// Make sure DMA1 channel 5 is disabled
 			while ( (DMA1_Channel5->CCR & DMA_CCR_EN) != 0)
 			{
 				DMA1_Channel5->CCR &= ~DMA_CCR_EN;
@@ -118,7 +133,7 @@ int main(void)
 			// Number of data items to transfer
 			DMA1_Channel5->CNDTR = 16;
 
-			// Enable DMA1 Stream 1
+			// Enable DMA1 channel 5
 			DMA1_Channel5->CCR |= DMA_CCR_EN;
 
 			// Enable USART2
@@ -126,6 +141,9 @@ int main(void)
 
 			irq = 0;
 		}
+		/*
+		 * END BT
+		 */
 
 	}
 }
@@ -147,10 +165,11 @@ void MAE(void){
 		break;
 
 	case 2: //pas avant
-		TIM3->CCR4 = 1350;
-		TIM3->CCR3 = 1350;
-		delay_ms(500);
-		ETAT = 3;
+		consigne_T = 1350;
+
+		if(torsion == consigne_T){
+			ETAT = 3;
+		}
 		break;
 
 	case 3: //bascule
@@ -161,11 +180,11 @@ void MAE(void){
 		break;
 
 	case 4: //pas avant
+		consigne_T = 1650;
 
-		TIM3->CCR4 = 1650;
-		TIM3->CCR3 = 1650;
-		delay_ms(500);
-		ETAT = 1;
+		if(torsion == consigne_T){
+			ETAT = 1;
+		}
 		break;
 
 
@@ -176,7 +195,23 @@ void MAE(void){
 }
 
 
+void kinematic_torsion(uint16_t inclinaison_pulse){
 
+	//
+	//calculate pulse width for 2 torsion motor
+	//state machine
+
+	if(torsion >=1000 && torsion <= 2000){
+		//Calcul
+		C = torsion;
+		D = torsion;
+
+		//set PWM motor value
+		TIM3->CCR2 = C;
+		TIM3->CCR1 = D;
+	}
+
+}
 
 
 
@@ -215,14 +250,8 @@ void kinematic_bascule(uint16_t inclinaison_pulse){
 		TIM3->CCR1 = A;
 
 	}else {
-		//B = 1500;
-		//A = 1500;
 
-		//TIM3->CCR1 = 1500;
-		//TIM3->CCR2 = 1500;
-		// error do nothing
 	}
-
 
 }
 
