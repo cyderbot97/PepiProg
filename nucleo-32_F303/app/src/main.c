@@ -207,8 +207,8 @@ void kinematic_torsion(uint16_t inclinaison_pulse){
 		D = torsion;
 
 		//set PWM motor value
-		TIM3->CCR2 = C;
-		TIM3->CCR1 = D;
+		TIM3->CCR3 = C;
+		TIM3->CCR4 = D;
 	}
 
 }
