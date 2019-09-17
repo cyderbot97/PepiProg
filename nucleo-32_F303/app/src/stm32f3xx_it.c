@@ -184,7 +184,7 @@ void USART1_IRQHandler(){
 extern uint8_t timebase_irq;
 
 extern uint16_t inclinaison;
-extern uint16_t consigne;
+extern uint16_t consigne_B;
 extern uint16_t torsion;
 extern uint16_t consigne_T;
 
@@ -199,11 +199,11 @@ void TIM6_DAC_IRQHandler()
 		timebase_irq = 1;
 
 		//Bascule
-		if(consigne > inclinaison){
+		if(consigne_B > inclinaison){
 			inclinaison = inclinaison+1;
 			//kinematic_bascule(inclinaison);
 
-		}else if(consigne < inclinaison){
+		}else if(consigne_B < inclinaison){
 			inclinaison = inclinaison-1;
 			//kinematic_bascule(inclinaison);
 

@@ -26,7 +26,7 @@ uint8_t	  rx_dma_buffer_bis[16];
 uint16_t data;
 uint8_t	  irq;
 
-uint16_t consigne;
+uint16_t consigne_B;
 uint16_t consigne_T;
 
 uint16_t inclinaison;
@@ -41,7 +41,7 @@ uint8_t MODE;
 
 int main(void)
 {
-	consigne = 1500;
+	consigne_B = 1500;
 	consigne_T = 1500;
 
 	inclinaison = 1500;
@@ -97,11 +97,11 @@ int main(void)
 			if(rx_dma_buffer[0]=='S') //0x41
 			{
 				//check command bytes
-				if(rx_dma_buffer[1]=='X') //Go Foward // 58
+				if(rx_dma_buffer[1]=='B') //Go Foward // 58
 				{
-					consigne = (rx_dma_buffer[2]-'0')*1000 + (rx_dma_buffer[3]-'0')*100 + (rx_dma_buffer[4]-'0')*10 + (rx_dma_buffer[5]-'0')*1;
-					kinematic_bascule(data);
-					my_printf("\r\n consigne X = %d\r\n",consigne);
+					consigne_B = (rx_dma_buffer[2]-'0')*1000 + (rx_dma_buffer[3]-'0')*100 + (rx_dma_buffer[4]-'0')*10 + (rx_dma_buffer[5]-'0')*1;
+					//kinematic_bascule(data);
+					my_printf("\r\n consigne_B X = %d\r\n",consigne_B);
 				}
 				else if(rx_dma_buffer[1]=='E') //force states //45
 				{
@@ -152,14 +152,14 @@ void MAE(void){
 	switch(ETAT){
 
 	case 0:
-		consigne = 1500;
+		consigne_B = 1500;
 		TIM3->CCR4 = 1500;
 		TIM3->CCR3 = 1500;
 		break;
 
 	case 1:	//bascule
-		consigne = 1750;
-		if(inclinaison == 1750){
+		consigne_B = 1750;
+		if(inclinaison == consigne_B){
 			ETAT = 2;
 		}
 		break;
@@ -173,8 +173,8 @@ void MAE(void){
 		break;
 
 	case 3: //bascule
-		consigne = 1250;
-		if(inclinaison == 1250){
+		consigne_B = 1250;
+		if(inclinaison == consigne_B){
 			ETAT = 4;
 		}
 		break;
