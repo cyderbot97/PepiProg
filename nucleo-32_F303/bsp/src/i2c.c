@@ -167,7 +167,7 @@ void BSP_I2C1_Init()
 	// Enable GPIOB clock
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
 
-	// Configure PB8, PB9 as AF mode
+	// Configure PB6 PB7 as AF mode
 	GPIOB->MODER &= ~(GPIO_MODER_MODER6 | GPIO_MODER_MODER7);
 	GPIOB->MODER |= (0X02 << GPIO_MODER_MODER6_Pos) | (0X02 << GPIO_MODER_MODER7_Pos);
 

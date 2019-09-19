@@ -360,5 +360,3 @@ void BSP_LED_Toggle()
 {
 	GPIOB->ODR ^= GPIO_ODR_3;
 }
-
-

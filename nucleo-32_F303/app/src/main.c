@@ -1,17 +1,17 @@
-#include "stm32f3xx.h"
 #include "main.h"
-#include "bsp.h"
-#include "delay.h"
-#include "math.h"
-#include "i2c.h"
 
 #define PI 3.14
+
+#define A_R 16384.0 // 32768/2
+#define G_R 131.0 // 32768/250
+#define RAD_TO_DEG 57.2
+
 
 void i2c_init(void);
 static uint8_t SystemClock_Config(void);
 
 int angle(int);
-uint16_t map(uint16_t, uint16_t, uint16_t, uint16_t, uint16_t);
+float map(float, float, float, float, float);
 void kinematic_bascule(uint16_t);
 void MAE(void);
 
@@ -39,17 +39,33 @@ uint8_t ETAT;
 
 uint8_t MODE;
 
+float Acc[2];
+float Gy[3];
+float Angle[3];
+
+int16_t AcX, AcY, AcZ, GyX, GyY, GyZ;
+
+float dt;
+
+float roll,pitch,yaw;
+
 int main(void)
+
 {
+	uint8_t		tx_data[2];
+	uint8_t		rx_data[6];
+	
 	consigne_B = 1500;
 	consigne_T = 1500;
 
 	inclinaison = 1500;
 
+	dt = 4/1000;
+	
 	kinematic_bascule(1500);
 	kinematic_torsion(1500);
 	ETAT = 0;
-	MODE = 0;
+	MODE = 1;
 
 	SystemClock_Config();
 
@@ -57,6 +73,8 @@ int main(void)
 	servo_init();
 	BSP_TIMER_Timebase_Init();
 	BSP_LED_Init();
+	BSP_I2C1_Init();
+	BSP_MPU6050_init();
 	BSP_NVIC_Init();
 
 	// Initialize Debug Console
@@ -66,6 +84,31 @@ int main(void)
 
 	while(1)
 	{
+		//read accel data
+		BSP_I2C1_Read(0x68,0x3B,rx_data,6);
+
+		AcX = (rx_data[0]<<8 | rx_data[1]);
+		AcY = (rx_data[2]<<8 | rx_data[3]);
+		AcZ = (rx_data[4]<<8 | rx_data[5]);
+
+		//read gyro data
+		BSP_I2C1_Read(0x68,0x43,rx_data,6);
+
+		GyX = (rx_data[0]<<8 | rx_data[1]);
+		GyY = (rx_data[2]<<8 | rx_data[3]);
+		GyZ = (rx_data[4]<<8 | rx_data[5]);
+
+		Gy[0] = GyX/G_R;
+		Gy[1] = GyY/G_R;
+		Gy[2] = GyZ/G_R;
+
+		Acc[1] = atanf(-1*(AcX/A_R)/sqrtf(powf((AcY/A_R),2) + powf((AcZ/A_R),2)))*RAD_TO_DEG;
+		Acc[0] = atanf((AcY/A_R)/sqrtf(powf((AcX/A_R),2) + powf((AcZ/A_R),2)))*RAD_TO_DEG;
+
+		//final data
+		roll = 0.97 *(roll+Gy[0]*dt) + 0.03*Acc[0];
+		pitch = 0.97 *(pitch+Gy[1]*dt) + 0.03*Acc[1];
+		yaw = yaw + Gy[2]*4/1000;
 
 		/*
 		 * Check state
@@ -79,6 +122,7 @@ int main(void)
 		}
 		else
 		{
+			consigne_B = (uint16_t)map(roll,-90,90,1000,2000);
 			kinematic_bascule(inclinaison); //manu
 		}
 
@@ -144,7 +188,7 @@ int main(void)
 		/*
 		 * END BT
 		 */
-
+		 delay_ms(4);
 	}
 }
 
@@ -256,7 +300,7 @@ void kinematic_bascule(uint16_t inclinaison_pulse){
 }
 
 
-uint16_t map(uint16_t x, uint16_t in_min, uint16_t in_max, uint16_t out_min, uint16_t out_max) {
+float map(float x, float in_min, float in_max, float out_min, float out_max) {
 
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }

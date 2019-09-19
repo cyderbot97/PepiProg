@@ -1,0 +1,380 @@
+17:12:22 **** Rebuild of configuration Debug for project nucleo-32_F303 ****
+Info: Internal Builder is used for build
+arm-atollic-eabi-gcc -c ..\app\src\main.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\main.o 
+..\app\src\main.c: In function 'main':
+..\app\src\main.c:66:2: warning: implicit declaration of function 'kinematic_torsion' [-Wimplicit-function-declaration]
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:74:2: warning: implicit declaration of function 'BSP_TIMER_Timebase_Init' [-Wimplicit-function-declaration]
+  BSP_TIMER_Timebase_Init();
+  ^~~~~~~~~~~~~~~~~~~~~~~
+..\app\src\main.c:75:2: warning: implicit declaration of function 'BSP_LED_Init' [-Wimplicit-function-declaration]
+  BSP_LED_Init();
+  ^~~~~~~~~~~~
+..\app\src\main.c:101:15: error: 'G_R' undeclared (first use in this function)
+   Gy[0] = GyX/G_R;
+               ^~~
+..\app\src\main.c:101:15: note: each undeclared identifier is reported only once for each function it appears in
+..\app\src\main.c:105:26: error: 'A_R' undeclared (first use in this function)
+   Acc[1] = atanf(-1*(AcX/A_R)/sqrtf(powf((AcY/A_R),2) + powf((AcZ/A_R),2)))*RAD_TO_DEG;
+                          ^~~
+..\app\src\main.c:105:77: error: 'RAD_TO_DEG' undeclared (first use in this function)
+   Acc[1] = atanf(-1*(AcX/A_R)/sqrtf(powf((AcY/A_R),2) + powf((AcZ/A_R),2)))*RAD_TO_DEG;
+                                                                             ^~~~~~~~~~
+..\app\src\main.c:55:11: warning: unused variable 'tx_data' [-Wunused-variable]
+  uint8_t  tx_data[2];
+           ^~~~~~~
+..\app\src\main.c: At top level:
+..\app\src\main.c:242:6: warning: conflicting types for 'kinematic_torsion'
+ void kinematic_torsion(uint16_t inclinaison_pulse){
+      ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:66:2: note: previous implicit declaration of 'kinematic_torsion' was here
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+17:13:07 **** Rebuild of configuration Debug for project nucleo-32_F303 ****
+Info: Internal Builder is used for build
+arm-atollic-eabi-gcc -c ..\app\src\stm32f3xx_it.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\stm32f3xx_it.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\mpu6050.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\mpu6050.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\bsp.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\bsp.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\delay.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\delay.o 
+arm-atollic-eabi-gcc -c ..\app\src\printf-stdarg.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\printf-stdarg.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\i2c.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\i2c.o 
+arm-atollic-eabi-gcc -c ..\cmsis\device\src\system_stm32f3xx.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o cmsis\device\src\system_stm32f3xx.o 
+arm-atollic-eabi-gcc -c ..\app\src\main.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\main.o 
+..\app\src\main.c: In function 'main':
+..\app\src\main.c:71:2: warning: implicit declaration of function 'kinematic_torsion' [-Wimplicit-function-declaration]
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:79:2: warning: implicit declaration of function 'BSP_TIMER_Timebase_Init' [-Wimplicit-function-declaration]
+  BSP_TIMER_Timebase_Init();
+  ^~~~~~~~~~~~~~~~~~~~~~~
+..\app\src\main.c:80:2: warning: implicit declaration of function 'BSP_LED_Init' [-Wimplicit-function-declaration]
+  BSP_LED_Init();
+  ^~~~~~~~~~~~
+..\app\src\main.c:60:11: warning: unused variable 'tx_data' [-Wunused-variable]
+  uint8_t  tx_data[2];
+           ^~~~~~~
+..\app\src\main.c: At top level:
+..\app\src\main.c:247:6: warning: conflicting types for 'kinematic_torsion'
+ void kinematic_torsion(uint16_t inclinaison_pulse){
+      ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:71:2: note: previous implicit declaration of 'kinematic_torsion' was here
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+arm-atollic-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -Wa,--warn -x assembler-with-cpp -specs=nano.specs -o cmsis\device\src\startup_stm32f303x8.o ..\cmsis\device\src\startup_stm32f303x8.s 
+arm-atollic-eabi-gcc -o nucleo-32_F303.elf app\src\main.o app\src\printf-stdarg.o app\src\stm32f3xx_it.o bsp\src\bsp.o bsp\src\delay.o bsp\src\i2c.o bsp\src\mpu6050.o cmsis\device\src\startup_stm32f303x8.o cmsis\device\src\system_stm32f3xx.o -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -TC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\STM32F303K8Tx_FLASH.ld -specs=nosys.specs -static -Wl,-cref,-u,Reset_Handler -Wl,-Map=nucleo-32_F303.map -Wl,--defsym=malloc_getpagesize_P=0x80 -Wl,--start-group -lc -lm -Wl,--end-group -specs=nano.specs 
+app\src\main.o: In function `main':
+C:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\Debug/..\app\src/main.c:77: undefined reference to `uart_init'
+C:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\Debug/..\app\src/main.c:78: undefined reference to `servo_init'
+C:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\Debug/..\app\src/main.c:79: undefined reference to `BSP_TIMER_Timebase_Init'
+C:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\Debug/..\app\src/main.c:83: undefined reference to `BSP_NVIC_Init'
+collect2.exe: error: ld returned 1 exit status
+17:13:24 **** Rebuild of configuration Debug for project nucleo-32_F303 ****
+Info: Internal Builder is used for build
+arm-atollic-eabi-gcc -c ..\app\src\stm32f3xx_it.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\stm32f3xx_it.o 
+arm-atollic-eabi-gcc -c ..\app\src\printf-stdarg.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\printf-stdarg.o 
+arm-atollic-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -Wa,--warn -x assembler-with-cpp -specs=nano.specs -o cmsis\device\src\startup_stm32f303x8.o ..\cmsis\device\src\startup_stm32f303x8.s 
+arm-atollic-eabi-gcc -c ..\bsp\src\bsp.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\bsp.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\i2c.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\i2c.o 
+arm-atollic-eabi-gcc -c ..\cmsis\device\src\system_stm32f3xx.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o cmsis\device\src\system_stm32f3xx.o 
+arm-atollic-eabi-gcc -c ..\app\src\main.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\main.o 
+..\app\src\main.c: In function 'main':
+..\app\src\main.c:66:2: warning: implicit declaration of function 'kinematic_torsion' [-Wimplicit-function-declaration]
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:74:2: warning: implicit declaration of function 'BSP_TIMER_Timebase_Init' [-Wimplicit-function-declaration]
+  BSP_TIMER_Timebase_Init();
+  ^~~~~~~~~~~~~~~~~~~~~~~
+..\app\src\main.c:75:2: warning: implicit declaration of function 'BSP_LED_Init' [-Wimplicit-function-declaration]
+  BSP_LED_Init();
+  ^~~~~~~~~~~~
+..\app\src\main.c:55:11: warning: unused variable 'tx_data' [-Wunused-variable]
+  uint8_t  tx_data[2];
+           ^~~~~~~
+..\app\src\main.c: At top level:
+..\app\src\main.c:242:6: warning: conflicting types for 'kinematic_torsion'
+ void kinematic_torsion(uint16_t inclinaison_pulse){
+      ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:66:2: note: previous implicit declaration of 'kinematic_torsion' was here
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+arm-atollic-eabi-gcc -c ..\bsp\src\delay.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\delay.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\mpu6050.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\mpu6050.o 
+arm-atollic-eabi-gcc -o nucleo-32_F303.elf app\src\main.o app\src\printf-stdarg.o app\src\stm32f3xx_it.o bsp\src\bsp.o bsp\src\delay.o bsp\src\i2c.o bsp\src\mpu6050.o cmsis\device\src\startup_stm32f303x8.o cmsis\device\src\system_stm32f3xx.o -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -TC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\STM32F303K8Tx_FLASH.ld -specs=nosys.specs -static -Wl,-cref,-u,Reset_Handler -Wl,-Map=nucleo-32_F303.map -Wl,--defsym=malloc_getpagesize_P=0x80 -Wl,--start-group -lc -lm -Wl,--end-group -specs=nano.specs 
+app\src\main.o: In function `main':
+C:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\Debug/..\app\src/main.c:72: undefined reference to `uart_init'
+C:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\Debug/..\app\src/main.c:73: undefined reference to `servo_init'
+C:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\Debug/..\app\src/main.c:74: undefined reference to `BSP_TIMER_Timebase_Init'
+C:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\Debug/..\app\src/main.c:78: undefined reference to `BSP_NVIC_Init'
+collect2.exe: error: ld returned 1 exit status
+17:14:58 **** Rebuild of configuration Debug for project nucleo-32_F303 ****
+Info: Internal Builder is used for build
+arm-atollic-eabi-gcc -c ..\app\src\main.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\main.o 
+..\app\src\main.c: In function 'main':
+..\app\src\main.c:66:2: warning: implicit declaration of function 'kinematic_torsion' [-Wimplicit-function-declaration]
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:74:2: warning: implicit declaration of function 'BSP_TIMER_Timebase_Init' [-Wimplicit-function-declaration]
+  BSP_TIMER_Timebase_Init();
+  ^~~~~~~~~~~~~~~~~~~~~~~
+..\app\src\main.c:75:2: warning: implicit declaration of function 'BSP_LED_Init' [-Wimplicit-function-declaration]
+  BSP_LED_Init();
+  ^~~~~~~~~~~~
+..\app\src\main.c:55:11: warning: unused variable 'tx_data' [-Wunused-variable]
+  uint8_t  tx_data[2];
+           ^~~~~~~
+..\app\src\main.c: At top level:
+..\app\src\main.c:242:6: warning: conflicting types for 'kinematic_torsion'
+ void kinematic_torsion(uint16_t inclinaison_pulse){
+      ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:66:2: note: previous implicit declaration of 'kinematic_torsion' was here
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+arm-atollic-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -Wa,--warn -x assembler-with-cpp -specs=nano.specs -o cmsis\device\src\startup_stm32f303x8.o ..\cmsis\device\src\startup_stm32f303x8.s 
+arm-atollic-eabi-gcc -c ..\bsp\src\delay.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\delay.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\mpu6050.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\mpu6050.o 
+arm-atollic-eabi-gcc -c ..\app\src\printf-stdarg.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\printf-stdarg.o 
+arm-atollic-eabi-gcc -c ..\cmsis\device\src\system_stm32f3xx.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o cmsis\device\src\system_stm32f3xx.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\i2c.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\i2c.o 
+arm-atollic-eabi-gcc -c ..\app\src\stm32f3xx_it.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\stm32f3xx_it.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\bsp.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\bsp.o 
+arm-atollic-eabi-gcc -o nucleo-32_F303.elf app\src\main.o app\src\printf-stdarg.o app\src\stm32f3xx_it.o bsp\src\bsp.o bsp\src\delay.o bsp\src\i2c.o bsp\src\mpu6050.o cmsis\device\src\startup_stm32f303x8.o cmsis\device\src\system_stm32f3xx.o -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -TC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\STM32F303K8Tx_FLASH.ld -specs=nosys.specs -static -Wl,-cref,-u,Reset_Handler -Wl,-Map=nucleo-32_F303.map -Wl,--defsym=malloc_getpagesize_P=0x80 -Wl,--start-group -lc -lm -Wl,--end-group -specs=nano.specs 
+C:\Program Files (x86)\Atollic\TrueSTUDIO for STM32 9.3.0\ide\jre\bin\java -jar C:\Program Files (x86)\Atollic\TrueSTUDIO for STM32 9.3.0\Tools\arm-atollic-reports.jar sizeinfo list nucleo-32_F303.elf 
+Generate build reports...
+Print size information
+   text	   data	    bss	    dec	    hex	filename
+  13800	    120	   1688	  15608	   3cf8	nucleo-32_F303.elf
+Print size information done
+Generate listing file
+Output sent to: nucleo-32_F303.list
+Generate listing file done
+Generate build reports done
+Info: Nothing to build for nucleo-32_F303
+17:17:55 **** Rebuild of configuration Debug for project nucleo-32_F303 ****
+Info: Internal Builder is used for build
+arm-atollic-eabi-gcc -c ..\app\src\main.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\main.o 
+..\app\src\main.c: In function 'main':
+..\app\src\main.c:66:2: warning: implicit declaration of function 'kinematic_torsion' [-Wimplicit-function-declaration]
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:74:2: warning: implicit declaration of function 'BSP_TIMER_Timebase_Init' [-Wimplicit-function-declaration]
+  BSP_TIMER_Timebase_Init();
+  ^~~~~~~~~~~~~~~~~~~~~~~
+..\app\src\main.c:75:2: warning: implicit declaration of function 'BSP_LED_Init' [-Wimplicit-function-declaration]
+  BSP_LED_Init();
+  ^~~~~~~~~~~~
+..\app\src\main.c:55:11: warning: unused variable 'tx_data' [-Wunused-variable]
+  uint8_t  tx_data[2];
+           ^~~~~~~
+..\app\src\main.c: At top level:
+..\app\src\main.c:164:6: warning: conflicting types for 'kinematic_torsion'
+ void kinematic_torsion(uint16_t inclinaison_pulse){
+      ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:66:2: note: previous implicit declaration of 'kinematic_torsion' was here
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+arm-atollic-eabi-gcc -c ..\bsp\src\mpu6050.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\mpu6050.o 
+arm-atollic-eabi-gcc -c ..\cmsis\device\src\system_stm32f3xx.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o cmsis\device\src\system_stm32f3xx.o 
+arm-atollic-eabi-gcc -c ..\app\src\printf-stdarg.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\printf-stdarg.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\i2c.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\i2c.o 
+arm-atollic-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -Wa,--warn -x assembler-with-cpp -specs=nano.specs -o cmsis\device\src\startup_stm32f303x8.o ..\cmsis\device\src\startup_stm32f303x8.s 
+arm-atollic-eabi-gcc -c ..\bsp\src\delay.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\delay.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\bsp.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\bsp.o 
+arm-atollic-eabi-gcc -c ..\app\src\stm32f3xx_it.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\stm32f3xx_it.o 
+arm-atollic-eabi-gcc -o nucleo-32_F303.elf app\src\main.o app\src\printf-stdarg.o app\src\stm32f3xx_it.o bsp\src\bsp.o bsp\src\delay.o bsp\src\i2c.o bsp\src\mpu6050.o cmsis\device\src\startup_stm32f303x8.o cmsis\device\src\system_stm32f3xx.o -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -TC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\STM32F303K8Tx_FLASH.ld -specs=nosys.specs -static -Wl,-cref,-u,Reset_Handler -Wl,-Map=nucleo-32_F303.map -Wl,--defsym=malloc_getpagesize_P=0x80 -Wl,--start-group -lc -lm -Wl,--end-group -specs=nano.specs 
+C:\Program Files (x86)\Atollic\TrueSTUDIO for STM32 9.3.0\ide\jre\bin\java -jar C:\Program Files (x86)\Atollic\TrueSTUDIO for STM32 9.3.0\Tools\arm-atollic-reports.jar sizeinfo list nucleo-32_F303.elf 
+Generate build reports...
+Print size information
+   text	   data	    bss	    dec	    hex	filename
+  13336	    120	   1688	  15144	   3b28	nucleo-32_F303.elf
+Print size information done
+Generate listing file
+Output sent to: nucleo-32_F303.list
+Generate listing file done
+Generate build reports done
+Info: Nothing to build for nucleo-32_F303
+17:22:31 **** Rebuild of configuration Debug for project nucleo-32_F303 ****
+Info: Internal Builder is used for build
+arm-atollic-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -Wa,--warn -x assembler-with-cpp -specs=nano.specs -o cmsis\device\src\startup_stm32f303x8.o ..\cmsis\device\src\startup_stm32f303x8.s 
+arm-atollic-eabi-gcc -c ..\bsp\src\delay.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\delay.o 
+arm-atollic-eabi-gcc -c ..\app\src\printf-stdarg.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\printf-stdarg.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\bsp.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\bsp.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\mpu6050.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\mpu6050.o 
+arm-atollic-eabi-gcc -c ..\cmsis\device\src\system_stm32f3xx.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o cmsis\device\src\system_stm32f3xx.o 
+arm-atollic-eabi-gcc -c ..\app\src\main.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\main.o 
+..\app\src\main.c: In function 'main':
+..\app\src\main.c:66:2: warning: implicit declaration of function 'kinematic_torsion' [-Wimplicit-function-declaration]
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:74:2: warning: implicit declaration of function 'BSP_TIMER_Timebase_Init' [-Wimplicit-function-declaration]
+  BSP_TIMER_Timebase_Init();
+  ^~~~~~~~~~~~~~~~~~~~~~~
+..\app\src\main.c:75:2: warning: implicit declaration of function 'BSP_LED_Init' [-Wimplicit-function-declaration]
+  BSP_LED_Init();
+  ^~~~~~~~~~~~
+..\app\src\main.c:55:11: warning: unused variable 'tx_data' [-Wunused-variable]
+  uint8_t  tx_data[2];
+           ^~~~~~~
+..\app\src\main.c: At top level:
+..\app\src\main.c:241:6: warning: conflicting types for 'kinematic_torsion'
+ void kinematic_torsion(uint16_t inclinaison_pulse){
+      ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:66:2: note: previous implicit declaration of 'kinematic_torsion' was here
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+arm-atollic-eabi-gcc -c ..\bsp\src\i2c.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\i2c.o 
+arm-atollic-eabi-gcc -c ..\app\src\stm32f3xx_it.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\stm32f3xx_it.o 
+arm-atollic-eabi-gcc -o nucleo-32_F303.elf app\src\main.o app\src\printf-stdarg.o app\src\stm32f3xx_it.o bsp\src\bsp.o bsp\src\delay.o bsp\src\i2c.o bsp\src\mpu6050.o cmsis\device\src\startup_stm32f303x8.o cmsis\device\src\system_stm32f3xx.o -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -TC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\STM32F303K8Tx_FLASH.ld -specs=nosys.specs -static -Wl,-cref,-u,Reset_Handler -Wl,-Map=nucleo-32_F303.map -Wl,--defsym=malloc_getpagesize_P=0x80 -Wl,--start-group -lc -lm -Wl,--end-group -specs=nano.specs 
+C:\Program Files (x86)\Atollic\TrueSTUDIO for STM32 9.3.0\ide\jre\bin\java -jar C:\Program Files (x86)\Atollic\TrueSTUDIO for STM32 9.3.0\Tools\arm-atollic-reports.jar sizeinfo list nucleo-32_F303.elf 
+Generate build reports...
+Print size information
+   text	   data	    bss	    dec	    hex	filename
+  13800	    120	   1688	  15608	   3cf8	nucleo-32_F303.elf
+Print size information done
+Generate listing file
+Output sent to: nucleo-32_F303.list
+Generate listing file done
+Generate build reports done
+Info: Nothing to build for nucleo-32_F303
+17:26:10 **** Rebuild of configuration Debug for project nucleo-32_F303 ****
+Info: Internal Builder is used for build
+arm-atollic-eabi-gcc -c ..\bsp\src\i2c.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\i2c.o 
+arm-atollic-eabi-gcc -c ..\app\src\printf-stdarg.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\printf-stdarg.o 
+arm-atollic-eabi-gcc -c ..\app\src\stm32f3xx_it.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\stm32f3xx_it.o 
+arm-atollic-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -Wa,--warn -x assembler-with-cpp -specs=nano.specs -o cmsis\device\src\startup_stm32f303x8.o ..\cmsis\device\src\startup_stm32f303x8.s 
+arm-atollic-eabi-gcc -c ..\app\src\main.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\main.o 
+..\app\src\main.c: In function 'main':
+..\app\src\main.c:66:2: warning: implicit declaration of function 'kinematic_torsion' [-Wimplicit-function-declaration]
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:74:2: warning: implicit declaration of function 'BSP_TIMER_Timebase_Init' [-Wimplicit-function-declaration]
+  BSP_TIMER_Timebase_Init();
+  ^~~~~~~~~~~~~~~~~~~~~~~
+..\app\src\main.c:75:2: warning: implicit declaration of function 'BSP_LED_Init' [-Wimplicit-function-declaration]
+  BSP_LED_Init();
+  ^~~~~~~~~~~~
+..\app\src\main.c:125:4: error: 'consigne' undeclared (first use in this function)
+    consigne = (uint16_t)map(-90,90,1000,2000);
+    ^~~~~~~~
+..\app\src\main.c:125:4: note: each undeclared identifier is reported only once for each function it appears in
+..\app\src\main.c:125:25: error: too few arguments to function 'map'
+    consigne = (uint16_t)map(-90,90,1000,2000);
+                         ^~~
+..\app\src\main.c:14:7: note: declared here
+ float map(float, float, float, float, float);
+       ^~~
+..\app\src\main.c:55:11: warning: unused variable 'tx_data' [-Wunused-variable]
+  uint8_t  tx_data[2];
+           ^~~~~~~
+..\app\src\main.c: At top level:
+..\app\src\main.c:242:6: warning: conflicting types for 'kinematic_torsion'
+ void kinematic_torsion(uint16_t inclinaison_pulse){
+      ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:66:2: note: previous implicit declaration of 'kinematic_torsion' was here
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+Info: Nothing to build for nucleo-32_F303
+17:26:35 **** Rebuild of configuration Debug for project nucleo-32_F303 ****
+Info: Internal Builder is used for build
+arm-atollic-eabi-gcc -c ..\app\src\main.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\main.o 
+..\app\src\main.c: In function 'main':
+..\app\src\main.c:66:2: warning: implicit declaration of function 'kinematic_torsion' [-Wimplicit-function-declaration]
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:74:2: warning: implicit declaration of function 'BSP_TIMER_Timebase_Init' [-Wimplicit-function-declaration]
+  BSP_TIMER_Timebase_Init();
+  ^~~~~~~~~~~~~~~~~~~~~~~
+..\app\src\main.c:75:2: warning: implicit declaration of function 'BSP_LED_Init' [-Wimplicit-function-declaration]
+  BSP_LED_Init();
+  ^~~~~~~~~~~~
+..\app\src\main.c:125:27: error: too few arguments to function 'map'
+    consigne_B = (uint16_t)map(-90,90,1000,2000);
+                           ^~~
+..\app\src\main.c:14:7: note: declared here
+ float map(float, float, float, float, float);
+       ^~~
+..\app\src\main.c:55:11: warning: unused variable 'tx_data' [-Wunused-variable]
+  uint8_t  tx_data[2];
+           ^~~~~~~
+..\app\src\main.c: At top level:
+..\app\src\main.c:242:6: warning: conflicting types for 'kinematic_torsion'
+ void kinematic_torsion(uint16_t inclinaison_pulse){
+      ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:66:2: note: previous implicit declaration of 'kinematic_torsion' was here
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+17:26:38 **** Rebuild of configuration Debug for project nucleo-32_F303 ****
+Info: Internal Builder is used for build
+arm-atollic-eabi-gcc -c ..\bsp\src\i2c.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\i2c.o 
+arm-atollic-eabi-gcc -c ..\app\src\stm32f3xx_it.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\stm32f3xx_it.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\bsp.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\bsp.o 
+arm-atollic-eabi-gcc -c ..\app\src\main.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\main.o 
+..\app\src\main.c: In function 'main':
+..\app\src\main.c:66:2: warning: implicit declaration of function 'kinematic_torsion' [-Wimplicit-function-declaration]
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:74:2: warning: implicit declaration of function 'BSP_TIMER_Timebase_Init' [-Wimplicit-function-declaration]
+  BSP_TIMER_Timebase_Init();
+  ^~~~~~~~~~~~~~~~~~~~~~~
+..\app\src\main.c:75:2: warning: implicit declaration of function 'BSP_LED_Init' [-Wimplicit-function-declaration]
+  BSP_LED_Init();
+  ^~~~~~~~~~~~
+..\app\src\main.c:125:27: error: too few arguments to function 'map'
+    consigne_B = (uint16_t)map(-90,90,1000,2000);
+                           ^~~
+..\app\src\main.c:14:7: note: declared here
+ float map(float, float, float, float, float);
+       ^~~
+..\app\src\main.c:55:11: warning: unused variable 'tx_data' [-Wunused-variable]
+  uint8_t  tx_data[2];
+           ^~~~~~~
+..\app\src\main.c: At top level:
+..\app\src\main.c:242:6: warning: conflicting types for 'kinematic_torsion'
+ void kinematic_torsion(uint16_t inclinaison_pulse){
+      ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:66:2: note: previous implicit declaration of 'kinematic_torsion' was here
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+17:27:27 **** Rebuild of configuration Debug for project nucleo-32_F303 ****
+Info: Internal Builder is used for build
+arm-atollic-eabi-gcc -c ..\app\src\stm32f3xx_it.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\stm32f3xx_it.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\i2c.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\i2c.o 
+arm-atollic-eabi-gcc -c ..\cmsis\device\src\system_stm32f3xx.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o cmsis\device\src\system_stm32f3xx.o 
+arm-atollic-eabi-gcc -c ..\app\src\main.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\main.o 
+..\app\src\main.c: In function 'main':
+..\app\src\main.c:66:2: warning: implicit declaration of function 'kinematic_torsion' [-Wimplicit-function-declaration]
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:74:2: warning: implicit declaration of function 'BSP_TIMER_Timebase_Init' [-Wimplicit-function-declaration]
+  BSP_TIMER_Timebase_Init();
+  ^~~~~~~~~~~~~~~~~~~~~~~
+..\app\src\main.c:75:2: warning: implicit declaration of function 'BSP_LED_Init' [-Wimplicit-function-declaration]
+  BSP_LED_Init();
+  ^~~~~~~~~~~~
+..\app\src\main.c:55:11: warning: unused variable 'tx_data' [-Wunused-variable]
+  uint8_t  tx_data[2];
+           ^~~~~~~
+..\app\src\main.c: At top level:
+..\app\src\main.c:242:6: warning: conflicting types for 'kinematic_torsion'
+ void kinematic_torsion(uint16_t inclinaison_pulse){
+      ^~~~~~~~~~~~~~~~~
+..\app\src\main.c:66:2: note: previous implicit declaration of 'kinematic_torsion' was here
+  kinematic_torsion(1500);
+  ^~~~~~~~~~~~~~~~~
+arm-atollic-eabi-gcc -c ..\bsp\src\bsp.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\bsp.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\mpu6050.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\mpu6050.o 
+arm-atollic-eabi-gcc -c ..\bsp\src\delay.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o bsp\src\delay.o 
+arm-atollic-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g -Wa,--warn -x assembler-with-cpp -specs=nano.specs -o cmsis\device\src\startup_stm32f303x8.o ..\cmsis\device\src\startup_stm32f303x8.s 
+arm-atollic-eabi-gcc -c ..\app\src\printf-stdarg.c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=gnu11 -DSTM32F303x8 -DUSE_HSI -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\app\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\bsp\inc -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\core -IC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\cmsis\device\inc -O0 -g -fstack-usage -Wall -specs=nano.specs -o app\src\printf-stdarg.o 
+arm-atollic-eabi-gcc -o nucleo-32_F303.elf app\src\main.o app\src\printf-stdarg.o app\src\stm32f3xx_it.o bsp\src\bsp.o bsp\src\delay.o bsp\src\i2c.o bsp\src\mpu6050.o cmsis\device\src\startup_stm32f303x8.o cmsis\device\src\system_stm32f3xx.o -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -TC:\Users\cyril\Documents\GitHub\STM32\nucleo-32_F303\STM32F303K8Tx_FLASH.ld -specs=nosys.specs -static -Wl,-cref,-u,Reset_Handler -Wl,-Map=nucleo-32_F303.map -Wl,--defsym=malloc_getpagesize_P=0x80 -Wl,--start-group -lc -lm -Wl,--end-group -specs=nano.specs 
+C:\Program Files (x86)\Atollic\TrueSTUDIO for STM32 9.3.0\ide\jre\bin\java -jar C:\Program Files (x86)\Atollic\TrueSTUDIO for STM32 9.3.0\Tools\arm-atollic-reports.jar sizeinfo list nucleo-32_F303.elf 
+Generate build reports...
+Print size information
+   text	   data	    bss	    dec	    hex	filename
+  13884	    120	   1688	  15692	   3d4c	nucleo-32_F303.elf
+Print size information done
+Generate listing file
+Output sent to: nucleo-32_F303.list
+Generate listing file done
+Generate build reports done
+Info: Nothing to build for nucleo-32_F303

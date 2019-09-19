@@ -3,7 +3,7 @@
 #define BSP_INC_DELAY_H_
 
 
-#include "stm32f3xx.h"
+#include "main.h"
 
 void delay_ms (uint32_t delay);
 
