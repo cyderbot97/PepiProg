@@ -39,33 +39,37 @@ uint8_t ETAT;
 
 uint8_t MODE;
 
-float Acc[2];
-float Gy[3];
-float Angle[3];
 
-int16_t AcX, AcY, AcZ, GyX, GyY, GyZ;
+int16_t ax, ay, az, gx, gy, gz;
+float Ax, Ay, Az, Gx, Gy, Gz;
+float roll,pitch,yaw, tampon;
+float kp,ki;
 
-float dt;
-
-float roll,pitch,yaw;
+float error, integral, output;
 
 int main(void)
 
 {
-	uint8_t		tx_data[2];
-	uint8_t		rx_data[6];
+	/*
+	 * initialisation
+	 */
+	uint8_t	tx_data[2];
+	uint8_t	rx_data[6];
+
 	
 	consigne_B = 1500;
 	consigne_T = 1500;
 
 	inclinaison = 1500;
-
-	dt = 4/1000;
 	
 	kinematic_bascule(1500);
 	kinematic_torsion(1500);
+
 	ETAT = 0;
 	MODE = 1;
+
+	kp = 1.2;
+	ki = 3;
 
 	SystemClock_Config();
 
@@ -77,42 +81,48 @@ int main(void)
 	BSP_MPU6050_init();
 	BSP_NVIC_Init();
 
-	// Initialize Debug Console
 	BSP_Console_Init();
 
 	my_printf("\r\n Robot Ready!\r\n");
+	/*
+	 * end initialisation
+	 */
 
 	while(1)
 	{
 		//read accel data
 		BSP_I2C1_Read(0x68,0x3B,rx_data,6);
 
-		AcX = (rx_data[0]<<8 | rx_data[1]);
-		AcY = (rx_data[2]<<8 | rx_data[3]);
-		AcZ = (rx_data[4]<<8 | rx_data[5]);
+		ax = (rx_data[0]<<8 | rx_data[1]);
+		ay = (rx_data[2]<<8 | rx_data[3]);
+		az = (rx_data[4]<<8 | rx_data[5]);
 
-		//read gyro data
 		BSP_I2C1_Read(0x68,0x43,rx_data,6);
 
-		GyX = (rx_data[0]<<8 | rx_data[1]);
-		GyY = (rx_data[2]<<8 | rx_data[3]);
-		GyZ = (rx_data[4]<<8 | rx_data[5]);
+		gx = (rx_data[0]<<8 | rx_data[1]);
+		gy = (rx_data[2]<<8 | rx_data[3]);
+		gz = (rx_data[4]<<8 | rx_data[5]);
 
-		Gy[0] = GyX/G_R;
-		Gy[1] = GyY/G_R;
-		Gy[2] = GyZ/G_R;
 
-		Acc[1] = atanf(-1*(AcX/A_R)/sqrtf(powf((AcY/A_R),2) + powf((AcZ/A_R),2)))*RAD_TO_DEG;
-		Acc[0] = atanf((AcY/A_R)/sqrtf(powf((AcX/A_R),2) + powf((AcZ/A_R),2)))*RAD_TO_DEG;
+		Gx = gx * 0.00026646248;//0.00013323124;
+		Gy = gy * 0.00026646248;
+		Gz = gz * 0.00026646248;
 
-		//final data
-		roll = 0.97 *(roll+Gy[0]*dt) + 0.03*Acc[0];
-		pitch = 0.97 *(pitch+Gy[1]*dt) + 0.03*Acc[1];
-		yaw = yaw + Gy[2]*4/1000;
+		Ax = ax * 0.000061035156f;
+		Ay = ay * 0.000061035156f;
+		Az = az * 0.000061035156f;
+
+		MadgwickAHRSupdateIMU(Gx, Gy, Gz, Ax, Ay, Az);
+
+		roll = atan2f(2.0f * (q0*q1 + q2*q3), q0*q0 - q1*q1 - q2*q2 + q3*q3)*180/3.14;
+		pitch  = asinf(2.0f * (q1*q3 - q0*q2))*180/3.14;
+		yaw   = atan2f(2.0f * (q1*q2 + q0*q3), q0*q0 + q1*q1 - q2*q2 - q3*q3)*180/3.14;
+
 
 		/*
 		 * Check state
 		 */
+
 		if((MODE == 0)&&(timebase_irq == 1))
 		{
 			kinematic_bascule(inclinaison); //auto
@@ -122,7 +132,14 @@ int main(void)
 		}
 		else
 		{
-			consigne_B = (uint16_t)map(roll,-90,90,1000,2000);
+
+			error = 0 - roll;
+			integral = integral + error*0.006;
+
+			output = kp*error + ki*integral;
+
+			consigne_B = output*1000/120 + 1500;
+
 			kinematic_bascule(inclinaison); //manu
 		}
 
@@ -156,6 +173,15 @@ int main(void)
 				{
 					MODE = rx_dma_buffer[2]-'0';
 				}
+
+				else if(rx_dma_buffer[1]=='P') //force states //4d
+				{
+					kp = ((float)(rx_dma_buffer[2]-'0')*10 + (float)(rx_dma_buffer[3]-'0'))/10;
+				}
+				else if(rx_dma_buffer[1]=='I') //force states //4d
+				{
+					ki = ((float)(rx_dma_buffer[2]-'0')*10 + (float)(rx_dma_buffer[3]-'0'))/10;
+				}
 				else //Stop everything
 				{
 
@@ -188,7 +214,7 @@ int main(void)
 		/*
 		 * END BT
 		 */
-		 delay_ms(4);
+		 delay_ms(5);
 	}
 }
 
@@ -209,7 +235,7 @@ void MAE(void){
 		break;
 
 	case 2: //pas avant
-		consigne_T = 1350;
+		consigne_T = 1650;
 
 		if(torsion == consigne_T){
 			ETAT = 3;
@@ -224,7 +250,7 @@ void MAE(void){
 		break;
 
 	case 4: //pas avant
-		consigne_T = 1650;
+		consigne_T = 1350;
 
 		if(torsion == consigne_T){
 			ETAT = 1;

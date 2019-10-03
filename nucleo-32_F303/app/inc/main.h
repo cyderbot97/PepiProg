@@ -15,6 +15,7 @@
 #include "math.h"
 #include "i2c.h"
 #include "mpu6050.h"
+#include "MadgwickAHRS.h"
 
 
 /* Global functions */
