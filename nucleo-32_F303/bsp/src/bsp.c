@@ -31,7 +31,7 @@ void BSP_TIMER_Timebase_Init()
 	// Fck = 64MHz -> /64 = 1MHz counting frequency
 	TIM6->PSC = (uint16_t) 64 -1;
 
-	// Set TIM6 auto-reload register for 1ms
+	// Set TIM6 auto-reload register for 1.5ms
 	TIM6->ARR = (uint16_t) 1500 -1;
 
 	// Enable auto-reload preload
@@ -42,6 +42,27 @@ void BSP_TIMER_Timebase_Init()
 
 	// Start TIM6 counter
 	TIM6->CR1 |= TIM_CR1_CEN;
+
+
+	RCC->APB1ENR |= RCC_APB1ENR_TIM7EN;
+
+	// Reset TIM6 configuration
+	TIM7->CR1 = 0x0000;
+	TIM7->CR2 = 0x0000;
+
+	// Set TIM6 prescaler
+	// Fck = 64MHz -> /64 = 1kHz counting frequency
+	TIM7->PSC = (uint16_t) 64000 -1;
+
+	// Set TIM6 auto-reload register for 1s
+	TIM7->ARR = (uint16_t) 10000;
+
+	// Enable auto-reload preload
+	TIM7->CR1 |= TIM_CR1_ARPE;
+
+
+	// Start TIM6 counter
+	TIM7->CR1 |= TIM_CR1_CEN;
 }
 
 extern uint8_t rx_dma_buffer[16];

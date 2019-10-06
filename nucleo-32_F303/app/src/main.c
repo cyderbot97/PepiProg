@@ -43,9 +43,11 @@ uint8_t MODE;
 int16_t ax, ay, az, gx, gy, gz;
 float Ax, Ay, Az, Gx, Gy, Gz;
 float roll,pitch,yaw, tampon;
-float kp,ki;
+float kp,ki,kd;
 
-float error, integral, output;
+float error, integral, output,previous_error,derivative;
+
+float signal;
 
 int main(void)
 
@@ -55,42 +57,55 @@ int main(void)
 	 */
 	uint8_t	tx_data[2];
 	uint8_t	rx_data[6];
-
 	
 	consigne_B = 1500;
 	consigne_T = 1500;
 
 	inclinaison = 1500;
 	
-	kinematic_bascule(1500);
-	kinematic_torsion(1500);
-
 	ETAT = 0;
 	MODE = 1;
 
-	kp = 1.2;
-	ki = 3;
+	kp = 0.55;
+	ki = 2.5;
+	kd = 0.0;
+
 
 	SystemClock_Config();
 
 	uart_init();
+
 	servo_init();
+
 	BSP_TIMER_Timebase_Init();
+
 	BSP_LED_Init();
+
 	BSP_I2C1_Init();
+
 	BSP_MPU6050_init();
+
 	BSP_NVIC_Init();
 
 	BSP_Console_Init();
 
+	kinematic_bascule(1500);
+	kinematic_torsion(1500);
+
+	TIM3->CCR4 = 1490;
+	TIM3->CCR3 = 1450;
+
 	my_printf("\r\n Robot Ready!\r\n");
+
 	/*
 	 * end initialisation
 	 */
 
 	while(1)
 	{
-		//read accel data
+		/*
+		 * MPU6050
+		 */
 		BSP_I2C1_Read(0x68,0x3B,rx_data,6);
 
 		ax = (rx_data[0]<<8 | rx_data[1]);
@@ -118,30 +133,36 @@ int main(void)
 		pitch  = asinf(2.0f * (q1*q3 - q0*q2))*180/3.14;
 		yaw   = atan2f(2.0f * (q1*q2 + q0*q3), q0*q0 + q1*q1 - q2*q2 - q3*q3)*180/3.14;
 
-
 		/*
-		 * Check state
+		 *
 		 */
 
-		if((MODE == 0)&&(timebase_irq == 1))
-		{
-			kinematic_bascule(inclinaison); //auto
-			kinematic_torsion(torsion);
-			MAE();
-			timebase_irq = 0;
+		/*
+		 * Send signal
+		 */
+
+		if(TIM7->CNT < 1000){
+			signal = signal + 0.2; // rampe
+		}else if(TIM7->CNT > 6000){
+			signal = 0; // echelon
 		}
-		else
-		{
 
-			error = 0 - roll;
-			integral = integral + error*0.006;
+		/*
+		 * PI
+		 */
 
-			output = kp*error + ki*integral;
+		error = 0.0 - roll;
+		integral = integral + error*0.007;
+		derivative = (error - previous_error)/0.007;
 
-			consigne_B = output*1000/120 + 1500;
+		output = kp*error + ki*integral + kd*derivative;
 
-			kinematic_bascule(inclinaison); //manu
-		}
+		inclinaison = output*1000/120 + 1500;
+
+		kinematic_bascule(inclinaison);
+
+		previous_error = error;
+
 
 		/*
 		 * END process state
@@ -182,6 +203,10 @@ int main(void)
 				{
 					ki = ((float)(rx_dma_buffer[2]-'0')*10 + (float)(rx_dma_buffer[3]-'0'))/10;
 				}
+				else if(rx_dma_buffer[1]=='D') //force states //4d
+				{
+					kd = ((float)(rx_dma_buffer[2]-'0')*10 + (float)(rx_dma_buffer[3]-'0'))/10;
+				}
 				else //Stop everything
 				{
 
@@ -215,6 +240,7 @@ int main(void)
 		 * END BT
 		 */
 		 delay_ms(5);
+		 BSP_LED_Toggle();
 	}
 }
 
