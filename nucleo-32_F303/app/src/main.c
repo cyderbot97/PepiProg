@@ -15,6 +15,8 @@ float map(float, float, float, float, float);
 void kinematic_bascule(uint16_t);
 void MAE(void);
 
+
+
 uint16_t A;
 uint16_t B;
 uint16_t C;
@@ -40,14 +42,17 @@ uint8_t ETAT;
 uint8_t MODE;
 
 
-int16_t ax, ay, az, gx, gy, gz;
-float Ax, Ay, Az, Gx, Gy, Gz;
+
 float roll,pitch,yaw, tampon;
-float kp,ki,kd;
+float kp,ki;
 
-float error, integral, output,previous_error,derivative;
+float error, integral, output;
 
-float signal;
+int8_t mpu_data[14];
+
+int16_t raw_ax, raw_ay, raw_az,imu_temp, raw_gx, raw_gy, raw_gz;
+float imu_ax, imu_ay, imu_az,imu_gx,imu_gy,imu_gz;
+
 
 int main(void)
 
@@ -55,114 +60,99 @@ int main(void)
 	/*
 	 * initialisation
 	 */
-	uint8_t	tx_data[2];
-	uint8_t	rx_data[6];
-	
+
 	consigne_B = 1500;
 	consigne_T = 1500;
 
 	inclinaison = 1500;
-	
+
+	kinematic_bascule(1500);
+	kinematic_torsion(1500);
+
 	ETAT = 0;
 	MODE = 1;
 
-	kp = 0.55;
-	ki = 2.5;
-	kd = 0.0;
-
+	kp = 0.8;
+	ki = 1.5;
 
 	SystemClock_Config();
 
 	uart_init();
 
-	servo_init();
-
 	BSP_TIMER_Timebase_Init();
+	BSP_SPI1_Init();
+	BSP_MPU9250_Init();
 
-	BSP_LED_Init();
-
-	BSP_I2C1_Init();
-
-	BSP_MPU6050_init();
-
+	delay_ms(1000);
+	servo_init();
 	BSP_NVIC_Init();
 
 	BSP_Console_Init();
 
-	kinematic_bascule(1500);
-	kinematic_torsion(1500);
-
-	TIM3->CCR4 = 1490;
-	TIM3->CCR3 = 1450;
-
 	my_printf("\r\n Robot Ready!\r\n");
-
 	/*
 	 * end initialisation
 	 */
 
 	while(1)
 	{
-		/*
-		 * MPU6050
-		 */
-		BSP_I2C1_Read(0x68,0x3B,rx_data,6);
+		//read accel data
+		BSP_SPI_Read(MPUREG_ACCEL_XOUT_H, mpu_data, 14);
 
-		ax = (rx_data[0]<<8 | rx_data[1]);
-		ay = (rx_data[2]<<8 | rx_data[3]);
-		az = (rx_data[4]<<8 | rx_data[5]);
+		raw_ax = ((int16_t)mpu_data[0]<<8) | (int16_t)mpu_data[1];
+		raw_ay = ((int16_t)mpu_data[2]<<8) | (int16_t)mpu_data[3];
+		raw_az = ((int16_t)mpu_data[4]<<8) | (int16_t)mpu_data[5];
 
-		BSP_I2C1_Read(0x68,0x43,rx_data,6);
+		// Scale Accelerometers with offset cancellation
+		imu_ax = raw_ax * MPU9250A_2g;
+		imu_ay = raw_ay * MPU9250A_2g;
+		imu_az = raw_az * MPU9250A_2g;
 
-		gx = (rx_data[0]<<8 | rx_data[1]);
-		gy = (rx_data[2]<<8 | rx_data[3]);
-		gz = (rx_data[4]<<8 | rx_data[5]);
+		// Record temperature
+		imu_temp = ((int16_t)mpu_data[6]<<8) | (int16_t)mpu_data[7];
+
+		raw_gx = ((int16_t)mpu_data[8]<<8)  | (int16_t)mpu_data[9];
+		raw_gy = ((int16_t)mpu_data[10]<<8) | (int16_t)mpu_data[11];
+		raw_gz = ((int16_t)mpu_data[12]<<8) | (int16_t)mpu_data[13];
+
+		// Scale Gyros with offset cancellation
+		imu_gx = raw_gx * MPU9250G_500dps;
+		imu_gy = raw_gy * MPU9250G_500dps;
+		imu_gz = raw_gz * MPU9250G_500dps;
 
 
-		Gx = gx * 0.00026646248;//0.00013323124;
-		Gy = gy * 0.00026646248;
-		Gz = gz * 0.00026646248;
-
-		Ax = ax * 0.000061035156f;
-		Ay = ay * 0.000061035156f;
-		Az = az * 0.000061035156f;
-
-		MadgwickAHRSupdateIMU(Gx, Gy, Gz, Ax, Ay, Az);
+		MadgwickAHRSupdateIMU(imu_gx, imu_gy, imu_gz, imu_ax, imu_ay, imu_az);
 
 		roll = atan2f(2.0f * (q0*q1 + q2*q3), q0*q0 - q1*q1 - q2*q2 + q3*q3)*180/3.14;
-		pitch  = asinf(2.0f * (q1*q3 - q0*q2))*180/3.14;
-		yaw   = atan2f(2.0f * (q1*q2 + q0*q3), q0*q0 + q1*q1 - q2*q2 - q3*q3)*180/3.14;
+
+		//roll = atan2f(2.0f * (q0*q1 + q2*q3), q0*q0 - q1*q1 - q2*q2 + q3*q3)*180/3.14;
+		//pitch  = asinf(2.0f * (q1*q3 - q0*q2))*180/3.14;
+		//yaw   = atan2f(2.0f * (q1*q2 + q0*q3), q0*q0 + q1*q1 - q2*q2 - q3*q3)*180/3.14;
+
 
 		/*
-		 *
+		 * Check state
 		 */
 
-		/*
-		 * Send signal
-		 */
-
-		if(TIM7->CNT < 1000){
-			signal = signal + 0.2; // rampe
-		}else if(TIM7->CNT > 6000){
-			signal = 0; // echelon
+		if((MODE == 0)&&(timebase_irq == 1))
+		{
+			kinematic_bascule(inclinaison); //auto
+			kinematic_torsion(torsion);
+			MAE();
+			timebase_irq = 0;
 		}
+		else
+		{
 
-		/*
-		 * PI
-		 */
+			error = 0 - roll;
+			integral = integral + error*0.006;
 
-		error = 0.0 - roll;
-		integral = integral + error*0.007;
-		derivative = (error - previous_error)/0.007;
+			output = kp*error + ki*integral;
 
-		output = kp*error + ki*integral + kd*derivative;
+			consigne_B = output*1000/120 + 1500;
 
-		inclinaison = output*1000/120 + 1500;
-
-		kinematic_bascule(inclinaison);
-
-		previous_error = error;
-
+			kinematic_bascule(inclinaison); //manu
+		}
 
 		/*
 		 * END process state
@@ -203,10 +193,6 @@ int main(void)
 				{
 					ki = ((float)(rx_dma_buffer[2]-'0')*10 + (float)(rx_dma_buffer[3]-'0'))/10;
 				}
-				else if(rx_dma_buffer[1]=='D') //force states //4d
-				{
-					kd = ((float)(rx_dma_buffer[2]-'0')*10 + (float)(rx_dma_buffer[3]-'0'))/10;
-				}
 				else //Stop everything
 				{
 
@@ -240,9 +226,9 @@ int main(void)
 		 * END BT
 		 */
 		 delay_ms(5);
-		 BSP_LED_Toggle();
 	}
 }
+
 
 void MAE(void){
 	switch(ETAT){
@@ -352,10 +338,6 @@ void kinematic_bascule(uint16_t inclinaison_pulse){
 }
 
 
-float map(float x, float in_min, float in_max, float out_min, float out_max) {
-
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
 
 /*
  * 	Clock configuration for the Nucleo STM32F303K8 board

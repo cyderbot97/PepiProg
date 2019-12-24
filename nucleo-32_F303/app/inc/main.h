@@ -13,8 +13,10 @@
 #include "bsp.h"
 #include "delay.h"
 #include "math.h"
-#include "i2c.h"
-#include "mpu6050.h"
+//#include "i2c.h"
+//#include "mpu6050.h"
+#include "spi.h"
+#include "mpu9250.h"
 #include "MadgwickAHRS.h"
 
 
